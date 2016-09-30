@@ -1,0 +1,151 @@
+{
+    "id": "com.gruijter.plugwise2py",
+    "name": {
+        "en": "Plugwise2py"
+    },
+    "description": {
+      "en": "monitor and control plugwise circles via Plugwise2py",
+      "nl": "lees en bestuur plugwise circles via Plugwise2py"
+    },
+    "version": "0.0.1",
+    "compatibility": ">= 0.10.x || 1.x",
+    "author": {
+        "name": "Robin Gruijter",
+        "email": "gruijter@hotmail.com"
+    },
+    "category": [ "appliances","tools","climate" ],
+    "images": {
+      "large": "./assets/images/large.jpg",
+      "small": "./assets/images/small.jpg"
+    },
+
+  "drivers": [
+    {
+      "id": "circle",
+      "name": {
+        "en": "Plugwise2py",
+        "nl": "Plugwise2py"
+      },
+      "class": "socket",
+      "capabilities": [ "onoff", "measure_power", "meter_power" ],
+       "images": {
+        "large": "drivers/circle/assets/images/large.jpg",
+        "small": "drivers/circle/assets/images/small.jpg"
+      },
+      "pair": [
+          {
+              "id": "list_circles",
+              "template": "list_devices",
+              "navigation": {
+                  "next": "add_circles"
+              }
+          },
+          {
+              "id": "add_circles",
+              "template": "add_devices"
+          }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "pw2py Circle settings",
+            "nl": "pw2py Circle instellingen"
+          },
+          "children": [
+            {
+              "id": "mac",
+              "type": "label",
+              "label": {
+                "en": "mac",
+                "nl": "mac"
+              },
+              "value": "0000000000000000"
+            },
+            {
+              "id": "type",
+              "type": "label",
+              "label": {
+                "en": "type",
+                "nl": "type"
+              },
+              "value": "circle"
+            },
+            {
+              "id": "production",
+              "type": "label",
+              "label": {
+                "en": "production",
+                "nl": "productie"
+              },
+              "value": "false"
+            },
+            {
+              "id": "pwName",
+              "type": "label",
+              "label": {
+                "en": "pw2py name",
+                "nl": "pw2py naam"
+              },
+              "value": " "
+            },
+            {
+              "id": "location",
+              "type": "label",
+              "label": {
+                "en": "pw2py location",
+                "nl": "pw2py locatie"
+              },
+              "value": " "
+            },
+            {
+              "id": "online",
+              "type": "label",
+              "label": {
+                "en": "online",
+                "nl": "online"
+              },
+              "value": "true"
+            },
+            {
+              "id": "lastseen",
+              "type": "label",
+              "label": {
+                "en": "Last seen",
+                "nl": "Laatst gezien"
+              },
+              "value": " "
+            },
+            {
+              "id": "switchable",
+              "type": "label",
+              "label": {
+                "en": "switchable",
+                "nl": "schakelbaar"
+              },
+              "value": "true"
+            },
+            {
+              "id": "schedule",
+              "type": "label",
+              "label": {
+                "en": "schedule",
+                "nl": "tijdschema"
+              },
+              "value": "off"
+            },
+            {
+              "id": "schedname",
+              "type": "label",
+              "label": {
+                "en": "schedule name",
+                "nl": "tijdschema naam"
+              },
+              "value": "off"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

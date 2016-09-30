@@ -1,0 +1,35 @@
+
+/*
+Note: circleEnergy = {
+    typ             :"pwenergy",
+    ts              : 1474194240,                     // timestamp when energy was read?
+    mac             :"0000000000000000",              // mac of circle in pw2py
+    power           : 185.6051,
+    energy          : 6.1868,
+    cum_energy      : 521930.4033,
+    interval        : 60
+  };
+
+Note: circleState = {
+    mac             : device_data.id,                 // mac of circle in pw2py // allCirclesState[device_data.id].mac
+    type            : '',                             // 'circle' or 'circle+'
+    name            : '',                             // name of circle in pw2py // allCirclesState[device_data.id].name
+    location        : '',                             // location of circle in pw2py // allCirclesState[device_data.id].location
+    online          : true,                           // true or false // dunno exactly what makes the condition true
+    lastseen        : 0,                              // timestamp when circle was last seen by circle+ maybe? or by pw2py?
+    monitor         : true,                           // true or false // Autonomous messages are published when monitoring = true and savelog = true
+    savelog         : true,                           // true or false // Autonomous messages are published when monitoring = true and savelog = true
+    readonly        : true,                           // true or false // allCirclesState[device_data.id].readonly
+    schedule        : '',                             // 'on' or 'off' // allCirclesState[device_data.id].schedule
+    schedname       : '',                             // name of schedule to use // allCirclesState[device_data.id].schedname
+    interval        : 0,                              // dunno what this is...  circle buffer power measure integration interval in minutes?
+    switch          : '',                             // 'on' or 'off' // allCirclesState[device_data.id].switch
+    switchreq       : '',                             // 'on' or 'off' // dunno what this is...
+    requid          : '',                             // dunno what this is... MQTT clientId maybe?
+    production      : true,                           // true or false // allCirclesState[device_data.id].production
+    powerts         : 0,                              // dunno what this is... timestamp of which power measurement?
+    power1s         : 0,                              // 1s power measure // allCirclesState[device_data.id].power1s (W)
+    power8s         : 0,                              // 8s power measure // allCirclesState[device_data.id].power8s (W)
+    power1h         : 0,                              // 1h power measure // allCirclesState[device_data.id].power1h (Wh)
+  };
+*/

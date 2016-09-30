@@ -1,0 +1,19 @@
+{
+
+"Plugwise2py settings"              : "Plugwise2py instellingen",
+"MQTT broker settings"              : "MQTT broker instellingen",
+"ip_mqtt"                           : "IP addres",
+"port_mqtt"                         : "Poort",
+"username_mqtt"                     : "Gebruikersnaam",
+"password_mqtt"                     : "Wachtwoord",
+"Plugwise2py webinterface settings" : "Plugwise2py webinterface instellingen",
+"ip_pw2py"                          : "IP addres",
+"port_pw2py"                        : "Poort",
+"Clear"                             : "Wissen",
+"Test"                              : "Test",
+"Control"                           : "Besturing",
+"Config"                            : "Configuratie",
+"Save"                              : "Opslaan"
+
+
+}

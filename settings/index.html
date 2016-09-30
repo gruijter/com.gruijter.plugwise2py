@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+    <head>
+    </head>
+    <body>
+        <h1 data-i18n="Plugwise2py settings"> </h1>
+        <fieldset>
+            <legend data-i18n="MQTT broker settings"> </legend>
+            <div class="field row">
+                <label for="ip_mqtt" data-i18n="ip_mqtt"> </label>
+                <input id="ip_mqtt" type="text" placeholder="e.g. 192.168.1.100" value="" />
+            </div>
+            <div class="field row">
+                <label for="port_mqtt" data-i18n="port_mqtt"> </label>
+                <input id="port_mqtt" type="number" value="1883" />
+            </div>
+            <div class="field row">
+                <label for="username_mqtt" data-i18n="username_mqtt"> </label>
+                <input id="username_mqtt" type="text" placeholder="optional" value="" />
+            </div>
+            <div class="field row">
+              <label for="password_mqtt" data-i18n="password_mqtt"> </label>
+              <input id="password_mqtt" type="password" value="" />
+            </div>
+
+            <div id="testresult"></div>
+
+            <button class="left" id="button_clear" onclick="empty()" data-i18n="Clear"> </button>
+            <button class="left" id="button_test" onclick="test()" data-i18n="Test"> </button>
+            <button class="right" id="button_save" onclick="save()" data-i18n="Save"> </button>
+
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n="Plugwise2py webinterface settings"> </legend>
+            <div class="field row">
+                <label for="ip_pw2py" data-i18n="ip_pw2py"> </label>
+                <input id="ip_pw2py" type="text" placeholder="e.g. 192.168.1.100" value="" />
+            </div>
+            <div class="field row">
+                <label for="port_pw2py" data-i18n="port_pw2py"> </label>
+                <input id="port_pw2py" type="number" value="8000" />
+            </div>
+            <button class="left" id="pw2py_control" onclick="pw2py_control()" data-i18n="Control"> </button>
+            <button class="left" id="pw2py_config" onclick="pw2py_config()" data-i18n="Config">  </button>
+            <button class="right" id="button_save_pw2py" onclick="save_pw2py()" data-i18n="Save"> </button>
+        </fieldset>
+
+
+        <script type="text/javascript">
+
+        var saveData;
+
+        // triggered when user opens settings page
+          function onHomeyReady(){
+            document.getElementById('testresult').innerHTML = " ";
+            button_save.disabled = true; // Disable save button until settings have been saved
+            Homey.get('settings_pw2py', function(err, storedData) {
+              if (err) {
+                console.log(err)
+              } else {
+                //console.log('got data: ', storedData);
+                if (storedData != (null || undefined)) {
+                  document.getElementById('ip_pw2py').value = storedData.ip_pw2py;
+                  document.getElementById('port_pw2py').value = storedData.port_pw2py;
+                };
+              };
+            });
+            Homey.get('settings', function(err, storedData) {
+              if (err) {
+                console.log(err)
+              } else {
+                //console.log('got data: ', storedData);
+                if (storedData != (null || undefined)) {
+                  document.getElementById('ip_mqtt').value = storedData.ip_mqtt;
+                  document.getElementById('port_mqtt').value = storedData.port_mqtt;
+                  document.getElementById('username_mqtt').value = storedData.username_mqtt;
+                  document.getElementById('password_mqtt').value = storedData.password_mqtt
+                };
+              };
+              button_save.disabled = false;
+              Homey.ready();  //ready to show the settings page
+            });
+          }
+
+        function empty() {
+          document.getElementById('ip_mqtt').value = "";
+          document.getElementById('port_mqtt').value = 1883;
+          document.getElementById('username_mqtt').value = "";
+          document.getElementById('password_mqtt').value = "";
+          document.getElementById('testresult').innerHTML = " ";
+        };
+
+        function test() {
+          document.getElementById('testresult').innerHTML = "Testing....";
+          saveData = {
+            ip_mqtt       : document.getElementById('ip_mqtt').value,
+            port_mqtt     : document.getElementById('port_mqtt').value,
+            username_mqtt : document.getElementById('username_mqtt').value,
+            password_mqtt : document.getElementById('password_mqtt').value
+          };
+
+//triggers an event in app.js to start test broker connection
+          Homey.set('testing',saveData, function (error, settings) {
+            if (error) {return console.error(error)};
+          });
+
+  //receive testresults back from app.js
+          Homey.on( 'testing_ready', function( data ){
+            console.log(data);
+            if (!data.error) {
+              document.getElementById('testresult').innerHTML = 'success: '+ data.result;
+            } else {
+              document.getElementById('testresult').innerHTML = 'error: '+data.result;
+            };
+          });
+
+        };
+
+        function save() {
+          document.getElementById('testresult').innerHTML = " ";
+          saveData = {
+            ip_mqtt       : document.getElementById('ip_mqtt').value,
+            port_mqtt     : document.getElementById('port_mqtt').value,
+            username_mqtt : document.getElementById('username_mqtt').value,
+            password_mqtt : document.getElementById('password_mqtt').value
+          };
+          Homey.set('settings', saveData, function (error, settings) {
+            if (error) {return console.error(error)};
+          });  //also works without function, so why the callback?
+        };
+
+        function save_pw2py() {
+          saveData = {
+            ip_pw2py      : document.getElementById('ip_pw2py').value,
+            port_pw2py    : document.getElementById('port_pw2py').value,
+          };
+          Homey.set('settings_pw2py', saveData, function (error, settings) {
+            if (error) {return console.error(error)};
+          });  //also works without function, so why the callback?
+        };
+
+        function pw2py_control() {
+          var url = 'http://'+document.getElementById('ip_pw2py').value+':'+document.getElementById('port_pw2py').value;
+          window.open(url,'_blank');
+        };
+
+        function pw2py_config() {
+          var url = 'http://'+document.getElementById('ip_pw2py').value+':'+document.getElementById('port_pw2py').value+'/cfg-pw2py.html';
+          window.open(url,'_blank');
+        };
+
+        </script>
+    </body>
+</html>

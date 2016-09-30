@@ -1,0 +1,19 @@
+{
+
+"Plugwise2py settings"              : "Plugwise2py settings",
+"MQTT broker settings"              : "MQTT broker settings",
+"ip_mqtt"                           : "IP address",
+"port_mqtt"                         : "Port",
+"username_mqtt"                     : "Username",
+"password_mqtt"                     : "Password",
+"Plugwise2py webinterface settings" : "Plugwise2py webinterface settings",
+"ip_pw2py"                          : "IP address",
+"port_pw2py"                        : "Port",
+"Clear"                             : "Clear",
+"Test"                              : "Test",
+"Control"                           : "Control",
+"Config"                            : "Config",
+"Save"                              : "Save"
+
+
+}
