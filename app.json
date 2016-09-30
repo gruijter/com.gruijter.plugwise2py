@@ -60,7 +60,7 @@
                 "en": "mac",
                 "nl": "mac"
               },
-              "value": "0000000000000000"
+              "value": "A1B2C3D4"
             },
             {
               "id": "type",
@@ -69,7 +69,7 @@
                 "en": "type",
                 "nl": "type"
               },
-              "value": "circle"
+              "value": " "
             },
             {
               "id": "production",
@@ -78,7 +78,7 @@
                 "en": "production",
                 "nl": "productie"
               },
-              "value": "false"
+              "value": " "
             },
             {
               "id": "pwName",

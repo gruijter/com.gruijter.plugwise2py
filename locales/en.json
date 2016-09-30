@@ -1,5 +1,4 @@
 {
-
 "Plugwise2py settings"              : "Plugwise2py settings",
 "MQTT broker settings"              : "MQTT broker settings",
 "ip_mqtt"                           : "IP address",
@@ -14,6 +13,4 @@
 "Control"                           : "Control",
 "Config"                            : "Config",
 "Save"                              : "Save"
-
-
 }

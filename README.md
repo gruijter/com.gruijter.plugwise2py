@@ -63,5 +63,5 @@ v0.0.1  2016.09.30 Initial release
 [plugwise-2-py]: https://github.com/SevenW/Plugwise-2-py
 [Seven Watt]: https://github.com/SevenW
 [forum]: https://forum.athom.com/discussion/1998
-[pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKU3U2V3P2YJ2
+[pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VLB7J3MQLVT2G
 [pp-donate-image]: https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif
