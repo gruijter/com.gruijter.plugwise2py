@@ -53,15 +53,17 @@ function connectMqtt () {
     // message is Buffer
   	Homey.log("message received from topic: "+topic);
   //	Homey.log(JSON.parse(message.toString()));
-    switch (topic.substr(0, 25)){
-      case 'plugwise2py/state/circle/':
-      	var circleState = JSON.parse(message.toString());
-        handleNewCircleState(circleState);
-        break;
-      case 'plugwise2py/state/energy/':
-        var circleEnergy = JSON.parse(message.toString());
-        handleNewEnergyState(circleEnergy);
-        break;
+    if (message.length>0) {               // won't crash but question is why empty?
+      switch (topic.substr(0, 25)){
+        case 'plugwise2py/state/circle/':
+          var circleState = JSON.parse(message.toString());
+          handleNewCircleState(circleState);
+          break;
+        case 'plugwise2py/state/energy/':
+          var circleEnergy = JSON.parse(message.toString());
+          handleNewEnergyState(circleEnergy);
+          break;
+      }
     }
   });
 
