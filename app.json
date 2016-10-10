@@ -7,7 +7,7 @@
       "en": "monitor and control plugwise circles via Plugwise2py",
       "nl": "lees en bestuur plugwise circles via Plugwise2py"
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "compatibility": ">= 0.10.x || 1.x",
     "author": {
         "name": "Robin Gruijter",
