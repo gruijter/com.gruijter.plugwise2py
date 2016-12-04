@@ -1,12 +1,14 @@
-var util    = require('util');
-var mqtt    = require('mqtt');
-var client  =  mqtt.connect();                   //MQTT client object
-var host;
-var options;
-var allCirclesState = {};     //latest state of all pw2py devices
-var allCirclesEnergy = {};    //latest energy state of all pw2py devices
-var devices = {};             //paired Homey devices copy in memory
-var intervalId = {};          //polling intervalId
+"use strict";
+
+const util    = require('util');
+const mqtt    = require('mqtt');
+let client  =  mqtt.connect();                   //MQTT client object
+let host;
+let options;
+let allCirclesState = {};     //latest state of all pw2py devices
+let allCirclesEnergy = {};    //latest energy state of all pw2py devices
+let devices = {};             //paired Homey devices copy in memory
+let intervalId = {};          //polling intervalId
 
 
 //----------------------Initializing devices-----------------------------
@@ -25,7 +27,7 @@ module.exports.init = function( devices_data, callback ) {
 function connectMqtt () {
   // connect to mqtt broker
   client.end();
-  var storedData = Homey.manager('settings').get( 'settings' );
+  let storedData = Homey.manager('settings').get( 'settings' );
   //Homey.log('got data: ', storedData);
   if (storedData != (null || undefined)) {
     host = 'mqtt://'+storedData.ip_mqtt+':'+storedData.port_mqtt;
@@ -56,11 +58,11 @@ function connectMqtt () {
     if (message.length>0) {               // won't crash but question is why empty?
       switch (topic.substr(0, 25)){
         case 'plugwise2py/state/circle/':
-          var circleState = JSON.parse(message.toString());
+          let circleState = JSON.parse(message.toString());
           handleNewCircleState(circleState);
           break;
         case 'plugwise2py/state/energy/':
-          var circleEnergy = JSON.parse(message.toString());
+          let circleEnergy = JSON.parse(message.toString());
           handleNewEnergyState(circleEnergy);
           break;
       }
@@ -123,11 +125,11 @@ module.exports.deleted = function( device_data, callback ) {
 // make pairing list of all circels posted by pw2py
 function makeDeviceList(circles, callback) {
   Homey.log('entered makeDeviceList');
-  var deviceList=[]; //all pw2py devices list used during pairing
-	var circle;
+  let deviceList=[]; //all pw2py devices list used during pairing
+	let circle;
 	for (circle in circles) {
 //		Homey.log(circle);
-		var tmp_device = {
+		let tmp_device = {
 			name: circles[circle].name,
 			data: { id: circles[circle].mac	},
       settings: {name: circles[circle].name},       //pw2py name of device as found during pairing
@@ -164,7 +166,7 @@ module.exports.settings = function( device_data, newSettingsObj, oldSettingsObj,
 
 function updateSettings (device_data) {
   if (device_data.circleState!=undefined){
-    settings = {
+    let settingsData = {
       name        : device_data.name,                                           // Homey name of device
       mac         : device_data.circleState.mac,                                // mac of circle in pw2py // allCirclesState[device_data.id].mac
       type        : device_data.circleState.type,                               // 'circle' or 'circle+'
@@ -177,7 +179,7 @@ function updateSettings (device_data) {
       schedule    : device_data.circleState.schedule.toString(),                // 'on' or 'off' // allCirclesState[device_data.id].schedule
       schedname   : device_data.circleState.schedname                           // name of schedule to use // allCirclesState[device_data.id].schedname
     };
-    module.exports.setSettings( device_data.homey_device, settings, function( err, settings ){
+    module.exports.setSettings( device_data.homey_device, settingsData, function( err, settings ){
         // ... dunno what to do here, think nothing...
     })
   }
@@ -188,7 +190,7 @@ module.exports.capabilities = {
   onoff: {
     get: function(device_data, callback) {
       if (devices[device_data.id]!=undefined){
-        var state = (devices[device_data.id].circleState.switch=='on');
+        let state = (devices[device_data.id].circleState.switch=='on');
         return callback(null,state);
       }
       callback();
@@ -207,7 +209,7 @@ module.exports.capabilities = {
     get: function(device_data, callback) {
       if (devices[device_data.id]!=undefined){
         if (devices[device_data.id].circleState.power8s != null){
-          var state = devices[device_data.id].circleState.power8s
+          let state = devices[device_data.id].circleState.power8s
           return callback(null,state);
         }
       }

@@ -1,23 +1,25 @@
 {
-    "id": "com.gruijter.plugwise2py",
-    "name": {
-        "en": "Plugwise2py"
-    },
-    "description": {
-      "en": "monitor and control plugwise circles via Plugwise2py",
-      "nl": "lees en bestuur plugwise circles via Plugwise2py"
-    },
-    "version": "0.0.3",
-    "compatibility": ">= 0.10.x || 1.x",
-    "author": {
-        "name": "Robin Gruijter",
-        "email": "gruijter@hotmail.com"
-    },
-    "category": [ "appliances","tools","climate" ],
-    "images": {
-      "large": "./assets/images/large.jpg",
-      "small": "./assets/images/small.jpg"
-    },
+  "id": "com.gruijter.plugwise2py",
+  "name": {
+      "en": "Plugwise2py"
+  },
+  "description": {
+    "en": "monitor and control plugwise circles via Plugwise2py",
+    "nl": "lees en bestuur plugwise circles via Plugwise2py"
+  },
+  "version": "1.0.0",
+  "compatibility": ">= 1.x",
+  "author": {
+      "name": "Gruijter",
+      "email": "gruijter@hotmail.com"
+  },
+
+  "images": {
+    "large": "./assets/images/large.jpg",
+    "small": "./assets/images/small.jpg"
+  },
+
+  "category": ["tools","appliances", "energy"],
 
   "drivers": [
     {

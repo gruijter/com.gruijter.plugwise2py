@@ -1,8 +1,8 @@
 "use strict";
 
-var util    = require('util');
-var mqtt    = require('mqtt');
-var testClient;    //MQTT client object
+const util    = require('util');
+const mqtt    = require('mqtt');
+let testClient;    //MQTT client object
 
 module.exports.init = init;
 
@@ -20,11 +20,11 @@ Homey.manager('settings').on( 'set', function(changedKey){
 	//Homey.log(changedKey);
 	if (changedKey === 'testing'){		// save button is pressed, testing can start
 		Homey.log('driver.js received test event from frontend');
-		var testBroker=Homey.manager('settings').get('testing');
+		let testBroker=Homey.manager('settings').get('testing');
 		Homey.log(testBroker);
 
-    var testHost = 'mqtt://'+testBroker.ip_mqtt+':'+testBroker.port_mqtt;
-    var testOptions =
+    let testHost = 'mqtt://'+testBroker.ip_mqtt+':'+testBroker.port_mqtt;
+    let testOptions =
       {
         //port    			: testBroker.port_mqtt,
         clientId			: 'Homey_'+ Math.random().toString(16).substr(2, 8),
