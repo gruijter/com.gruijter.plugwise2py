@@ -53,7 +53,7 @@ function connectMqtt () {
   //handle incoming messages
   client.on('message', function (topic, message) {
     // message is Buffer
-  	Homey.log("message received from topic: "+topic);
+  	//Homey.log("message received from topic: "+topic);
 //  	Homey.log(JSON.parse(message.toString()));
     if (message.length>0) {               // won't crash but question is why empty?
       switch (topic.substr(0, 25)){
@@ -220,7 +220,7 @@ module.exports.capabilities = {
     get: function(device_data, callback) {
       if (devices[device_data.id]!=undefined){
         if (devices[device_data.id].circleEnergy.cum_energy != null){
-          state = devices[device_data.id].circleEnergy.cum_energy/1000;
+          let state = devices[device_data.id].circleEnergy.cum_energy/1000;
           return callback(null,state);
         }
       }

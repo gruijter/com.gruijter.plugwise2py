@@ -7,7 +7,7 @@
     "en": "monitor and control plugwise circles via Plugwise2py",
     "nl": "lees en bestuur plugwise circles via Plugwise2py"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">= 1.x",
   "author": {
       "name": "Gruijter",
@@ -19,7 +19,7 @@
     "small": "./assets/images/small.jpg"
   },
 
-  "category": ["tools","appliances", "energy"],
+  "category": ["energy","appliances", "tools"],
 
   "drivers": [
     {

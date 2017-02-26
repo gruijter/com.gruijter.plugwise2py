@@ -57,6 +57,7 @@ the forum.
 
 Version changelog
 ```
+v1.0.1  2017.02.27 MQTT client updated to v2.4.0. Small bug fix.
 v1.0.0  2016.12.04 MQTT client updated to v2.1.3. Minor code changes.
 v0.0.3  2016.10.18 Remove 0 readings after app start. Code cleanup.
 v0.0.2  2016.10.10 fix Unexpected end of input' crash
