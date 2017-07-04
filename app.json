@@ -7,8 +7,8 @@
     "en": "monitor and control plugwise circles via Plugwise2py",
     "nl": "lees en bestuur plugwise circles via Plugwise2py"
   },
-  "version": "1.0.1",
-  "compatibility": ">= 1.x",
+  "version": "1.1.0",
+  "compatibility": ">= 1.2",
   "author": {
       "name": "Gruijter",
       "email": "gruijter@hotmail.com"
@@ -64,12 +64,31 @@
               },
               "value": "A1B2C3D4"
             },
+						{
+              "id": "pollingInterval",
+              "type": "number",
+              "label": {
+                "en": "polling interval (seconds)",
+                "nl": "polling interval (seconden)"
+              },
+              "attr": { "min": 10 },
+              "value": 20
+            },
             {
               "id": "type",
               "type": "label",
               "label": {
                 "en": "type",
                 "nl": "type"
+              },
+              "value": " "
+            },
+						{
+              "id": "lastseen",
+              "type": "label",
+              "label": {
+                "en": "Last seen",
+                "nl": "Laatst gezien"
               },
               "value": " "
             },
@@ -97,24 +116,6 @@
               "label": {
                 "en": "pw2py location",
                 "nl": "pw2py locatie"
-              },
-              "value": " "
-            },
-            {
-              "id": "online",
-              "type": "label",
-              "label": {
-                "en": "online",
-                "nl": "online"
-              },
-              "value": "true"
-            },
-            {
-              "id": "lastseen",
-              "type": "label",
-              "label": {
-                "en": "Last seen",
-                "nl": "Laatst gezien"
               },
               "value": " "
             },

@@ -5,9 +5,7 @@ by [Seven Watt], can be used as an alternative for Plugwise Source. It runs on
 all devices that support python, such as your NAS or a raspberry pi.
 
 ### Setting it up: ###
-It can be a bit of a challenge to setup the [Plugwise-2-py] tool up if you are
-not really into python or linux. A manual for setting it up on a rpi is provided
-on [Plugwise-2-py].
+A manual for setting it up on a rpi is provided on [Plugwise-2-py].
 
 After setting up Plugwise-2-py you can configure Homey to connect to it. some of
 the base settings should however always be done within Plugwise-2-py, such as:
@@ -57,6 +55,7 @@ the forum.
 
 Version changelog
 ```
+v1.1.0	2017.07.04 MQTT client updated to v2.9.0. Code cleanup and bug fixes.
 v1.0.1  2017.02.27 MQTT client updated to v2.4.0. Small bug fix.
 v1.0.0  2016.12.04 MQTT client updated to v2.1.3. Minor code changes.
 v0.0.3  2016.10.18 Remove 0 readings after app start. Code cleanup.
