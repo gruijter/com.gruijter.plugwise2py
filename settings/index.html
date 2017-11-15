@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+			<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
     </head>
     <body>
         <h1 data-i18n="Plugwise2py settings"> </h1>
@@ -25,9 +26,9 @@
 
             <div id="testresult"></div>
 
-            <button class="left" id="button_clear" onclick="empty()" data-i18n="Clear"> </button>
-            <button class="left" id="button_test" onclick="test()" data-i18n="Test"> </button>
-            <button class="right" id="button_save" onclick="save()" data-i18n="Save"> </button>
+            <button class="left" id="button_clear" data-i18n="Clear"> </button>
+            <button class="left" id="button_test" data-i18n="Test"> </button>
+            <button class="right" id="button_save" data-i18n="Save"> </button>
 
         </fieldset>
 
@@ -41,9 +42,9 @@
                 <label for="port_pw2py" data-i18n="port_pw2py"> </label>
                 <input id="port_pw2py" type="number" value="8000" />
             </div>
-            <button class="left" id="pw2py_control" onclick="pw2py_control()" data-i18n="Control"> </button>
-            <button class="left" id="pw2py_config" onclick="pw2py_config()" data-i18n="Config">  </button>
-            <button class="right" id="button_save_pw2py" onclick="save_pw2py()" data-i18n="Save"> </button>
+            <button class="left" id="pw2py_control" data-i18n="Control"> </button>
+            <button class="left" id="pw2py_config" data-i18n="Config">  </button>
+            <button class="right" id="pw2py_save" data-i18n="Save"> </button>
         </fieldset>
 
         <script type="text/javascript">
@@ -51,103 +52,119 @@
         var saveData;
 
         // triggered when user opens settings page
-          function onHomeyReady(){
-            document.getElementById('testresult').innerHTML = " ";
-            button_save.disabled = true; // Disable save button until settings have been saved
-            Homey.get('settings_pw2py', function(err, storedData) {
-              if (err) {
-                console.log(err)
-              } else {
-                //console.log('got data: ', storedData);
-                if (storedData != (null || undefined)) {
-                  document.getElementById('ip_pw2py').value = storedData.ip_pw2py;
-                  document.getElementById('port_pw2py').value = storedData.port_pw2py;
-                };
-              };
-            });
-            Homey.get('settings', function(err, storedData) {
-              if (err) {
-                console.log(err)
-              } else {
-                //console.log('got data: ', storedData);
-                if (storedData != (null || undefined)) {
-                  document.getElementById('ip_mqtt').value = storedData.ip_mqtt;
-                  document.getElementById('port_mqtt').value = storedData.port_mqtt;
-                  document.getElementById('username_mqtt').value = storedData.username_mqtt;
-                  document.getElementById('password_mqtt').value = storedData.password_mqtt
-                };
-              };
-              button_save.disabled = false;
-              Homey.ready();  //ready to show the settings page
-            });
-          }
+        function onHomeyReady(Homey){
+					var ipMqttElement = document.getElementById('ip_mqtt');
+					var portMqttElement = document.getElementById('port_mqtt');
+					var usernameMqttElement = document.getElementById('username_mqtt');
+					var passwordMqttElement = document.getElementById('password_mqtt');
+					var testResultElement = document.getElementById('testresult');
+					var clearElement = document.getElementById('button_clear');
+					var testElement = document.getElementById('button_test');
+					var saveElement = document.getElementById('button_save');
+					var ipPw2pyElement = document.getElementById('ip_pw2py');
+					var portPw2pyElement = document.getElementById('port_pw2py');
+					var pw2pyControlElement = document.getElementById('pw2py_control');
+					var pw2pyConfigElement = document.getElementById('pw2py_config');
+					var Pw2pySaveElement = document.getElementById('pw2py_save');
 
-        function empty() {
-          document.getElementById('ip_mqtt').value = "";
-          document.getElementById('port_mqtt').value = 1883;
-          document.getElementById('username_mqtt').value = "";
-          document.getElementById('password_mqtt').value = "";
-          document.getElementById('testresult').innerHTML = " ";
-        };
+          testResultElement.innerHTML = " ";
+          saveElement.disabled = true; // Disable save button until settings have been checked
 
-        function test() {
-          document.getElementById('testresult').innerHTML = "Testing....";
-          saveData = {
-            ip_mqtt       : document.getElementById('ip_mqtt').value,
-            port_mqtt     : document.getElementById('port_mqtt').value,
-            username_mqtt : document.getElementById('username_mqtt').value,
-            password_mqtt : document.getElementById('password_mqtt').value
-          };
-
-//triggers an event in app.js to start test broker connection
-          Homey.set('testing',saveData, function (error, settings) {
-            if (error) {return console.error(error)};
-          });
-
-  //receive testresults back from app.js
-          Homey.on( 'testing_ready', function( data ){
-            console.log(data);
-            if (!data.error) {
-              document.getElementById('testresult').innerHTML = 'success: '+ data.result;
+          Homey.get('settings_pw2py', function(err, storedData) {
+            if (err) {
+              console.log(err);
             } else {
-              document.getElementById('testresult').innerHTML = 'error: '+data.result;
-            };
+              //console.log('got data: ', storedData);
+              if ((storedData != null) && (storedData != undefined)) {
+                ipPw2pyElement.value = storedData.ip_pw2py;
+                portPw2pyElement.value = storedData.port_pw2py;
+              }
+            }
           });
 
-        };
+          Homey.get('settings', function(err, storedData) {
+            if (err) {
+              console.log(err);
+            } else {
+              //console.log('got data: ', storedData);
+              if ((storedData != null) && (storedData != undefined)) {
+                ipMqttElement.value = storedData.ip_mqtt;
+                portMqttElement.value = storedData.port_mqtt;
+                usernameMqttElement.value = storedData.username_mqtt;
+                passwordMqttElement.value = storedData.password_mqtt
+              }
+            }
 
-        function save() {
-          document.getElementById('testresult').innerHTML = " ";
-          saveData = {
-            ip_mqtt       : document.getElementById('ip_mqtt').value,
-            port_mqtt     : document.getElementById('port_mqtt').value,
-            username_mqtt : document.getElementById('username_mqtt').value,
-            password_mqtt : document.getElementById('password_mqtt').value
-          };
-          Homey.set('settings', saveData, function (error, settings) {
-            if (error) {return console.error(error)};
-          });  //also works without function, so why the callback?
-        };
+            Homey.ready();  //ready to show the settings page
+          });
 
-        function save_pw2py() {
-          saveData = {
-            ip_pw2py      : document.getElementById('ip_pw2py').value,
-            port_pw2py    : document.getElementById('port_pw2py').value,
-          };
-          Homey.set('settings_pw2py', saveData, function (error, settings) {
-            if (error) {return console.error(error)};
-          });  //also works without function, so why the callback?
-        };
+	        clearElement.addEventListener('click', function(e) {
+	          ipMqttElement.value = "";
+	          portMqttElement.value = 1883;
+	          usernameMqttElement.value = "";
+	          passwordMqttElement.value = "";
+	          testResultElement.innerHTML = " ";
+	        });
 
-        function pw2py_control() {
-          var url = 'http://'+document.getElementById('ip_pw2py').value+':'+document.getElementById('port_pw2py').value;
-          window.open(url,'_blank');
-        };
+					testElement.addEventListener('click', function(e) {
+	          testResultElement.innerHTML = "Testing....";
+	          saveData = {
+	            ip_mqtt       : ipMqttElement.value,
+	            port_mqtt     : portMqttElement.value,
+	            username_mqtt : usernameMqttElement.value,
+	            password_mqtt : passwordMqttElement.value
+	          };
+						//test broker settings
+						console.log(`testing ${JSON.stringify(saveData)}`);
+						Homey.api('POST', '/validate', saveData, function( err, result ) {
+						    if( err ) {
+									testResultElement.innerHTML = 'error: '+err;
+									saveElement.disabled = true;
+									return Homey.alert(err, 'error')
+								};
+								testResultElement.innerHTML =  Homey.__("correctSettings"); //'success: the MQTT settings are correct, now save them!';
+								saveElement.disabled = false;
+								return Homey.alert(Homey.__("correctSettings"), 'info')
+						});
 
-        function pw2py_config() {
-          var url = 'http://'+document.getElementById('ip_pw2py').value+':'+document.getElementById('port_pw2py').value+'/cfg-pw2py.html';
-          window.open(url,'_blank');
-        };
+	        });
+
+	        saveElement.addEventListener('click', function(e) {
+	          testResultElement.innerHTML = " ";
+	          saveData = {
+	            ip_mqtt       : ipMqttElement.value,
+	            port_mqtt     : portMqttElement.value,
+	            username_mqtt : usernameMqttElement.value,
+	            password_mqtt : passwordMqttElement.value
+	          };
+	          Homey.set('settings', saveData, function (error) {
+	            if (error) {return Homey.alert(error, 'error')};
+							return Homey.alert(Homey.__("settingsSaved"), 'info')
+	          });
+	        });
+
+					Pw2pySaveElement.addEventListener('click', function(e) {
+	          saveData = {
+	            ip_pw2py      : ipPw2pyElement.value,
+	            port_pw2py    : portPw2pyElement.value,
+	          }
+	          Homey.set('settings_pw2py', saveData, function (error) {
+							if (error) {return Homey.alert(error, 'error')};
+							return Homey.alert(Homey.__("settingsSaved"), 'info')
+	          });
+	        });
+
+	        pw2pyControlElement.addEventListener('click', function(e) {
+	          var url = 'http://'+ipPw2pyElement.value+':'+portPw2pyElement.value;
+						Homey.openURL( url );
+	        });
+
+	        pw2pyConfigElement.addEventListener('click', function(e) {
+	          var url = 'http://'+ipPw2pyElement.value+':'+portPw2pyElement.value+'/cfg-pw2py.html';
+						Homey.openURL( url );
+	        });
+
+				}
 
         </script>
     </body>

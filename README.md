@@ -4,20 +4,6 @@ Homey app to connect plugwise circles via [Plugwise-2-py]. This tool, developed
 by [Seven Watt], can be used as an alternative for Plugwise Source. It runs on
 all devices that support python, such as your NAS or a raspberry pi.
 
-### Setting it up: ###
-A manual for setting it up on a rpi is provided on [Plugwise-2-py].
-
-After setting up Plugwise-2-py you can configure Homey to connect to it. some of
-the base settings should however always be done within Plugwise-2-py, such as:
-* Enable 10-seconds monitoring: this should be enabled
-* Enable logging form Circle internal metering buffers: this should be enabled
-* Log interval: I advise to set this to 60 minutes
-* Schedules: can be used to switch a circle to powersaving mode automatically
-* Always on: enable this for circles that must not be switchable from Homey
-* Production: enable this for circles that measure production (e.g. solar panel)
-
-Circles are added through the Devices tab of Homey.
-
 ### Homey functionality ###
 Device Card in browser and on mobile app:
 * Switch on or off
@@ -42,25 +28,36 @@ Action Flow Cards:
 * Toggle on or off
 
 
-##### Donate: #####
+### Setting up the PW2PY server ###
+A manual for setting it up on a rpi is provided on [Plugwise-2-py].
 
-If you like the app you can show your appreciation by posting it in the [forum],
-and if you really like it you can donate. Feature requests can also be placed on
-the forum.
+To make it work properly with Homey you must do some base settings within PW2PY:
+* Enable 10-seconds monitoring: this should be enabled
+* Enable logging form Circle internal metering buffers: this should be enabled
+* Log interval: I advise to set this to 60 minutes
+* Schedules: can be used to switch a circle to powersaving mode automatically
+* Always on: enable this for circles that must not be switchable from Homey
+* Production: enable this for circles that measure production (e.g. solar panel)
+
+### Setting up Homey ###
+After setting up PW2PY you can configure Homey to connect to it. Go to the app
+settings screen and enter the IP address of the PW2PY-MQTT server that you are
+using.
+Circles can then be added through the Devices tab of Homey. After pairing a
+circle you can set the polling interval per circle in the device settings
+(minimum 10 seconds).
+
+##### Donate: #####
+If you like the app you can show your appreciation by posting it in the [forum].
+If you really like it you can buy me a beer, or coffee, or whatever you like :)
 
 [![Paypal donate][pp-donate-image]][pp-donate-link]
-
 
 ===============================================================================
 
 Version changelog
 ```
-v1.1.0	2017.07.04 MQTT client updated to v2.9.0. Code cleanup and bug fixes.
-v1.0.1  2017.02.27 MQTT client updated to v2.4.0. Small bug fix.
-v1.0.0  2016.12.04 MQTT client updated to v2.1.3. Minor code changes.
-v0.0.3  2016.10.18 Remove 0 readings after app start. Code cleanup.
-v0.0.2  2016.10.10 fix Unexpected end of input' crash
-v0.0.1  2016.09.30 Initial release
+v2.0.0  2017.11.15 Complete code rewrite to SDK V2.
 ```
 
 [plugwise-2-py]: https://github.com/SevenW/Plugwise-2-py

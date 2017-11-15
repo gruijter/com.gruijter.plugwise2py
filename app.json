@@ -7,8 +7,13 @@
     "en": "monitor and control plugwise circles via Plugwise2py",
     "nl": "lees en bestuur plugwise circles via Plugwise2py"
   },
-  "version": "1.1.0",
-  "compatibility": ">= 1.2",
+	"tags": {
+		"en": [ "plugwise", "energy monitoring" ],
+		"en": [ "plugwise", "energie meten"  ]
+	},
+  "version": "2.0.0",
+  "compatibility": ">= 1.5",
+	"sdk": 2,
   "author": {
       "name": "Gruijter",
       "email": "gruijter@hotmail.com"
@@ -81,7 +86,7 @@
                 "en": "type",
                 "nl": "type"
               },
-              "value": " "
+              "value": "unknown"
             },
 						{
               "id": "lastseen",

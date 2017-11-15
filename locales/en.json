@@ -12,5 +12,7 @@
 "Test"                              : "Test",
 "Control"                           : "Control",
 "Config"                            : "Config",
-"Save"                              : "Save"
+"Save"                              : "Save",
+"correctSettings"										: "Success: the MQTT settings are correct. Now save them!",
+"settingsSaved"											: "The settings have been saved"
 }

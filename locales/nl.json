@@ -12,5 +12,7 @@
 "Test"                              : "Test",
 "Control"                           : "Besturing",
 "Config"                            : "Configuratie",
-"Save"                              : "Opslaan"
+"Save"                              : "Opslaan",
+"correctSettings"										: "Succes: de MQTT instellingen zijn juist. Sla ze nu op!",
+"settingsSaved"											: "De instellingen zijn opgeslagen"
 }
