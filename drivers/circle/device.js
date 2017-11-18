@@ -7,20 +7,25 @@ class Circle extends Homey.Device {
 	// this method is called when the Device is inited
 	onInit() {
 		this.log(`device init ${this.getClass()} ${this.getData().id} ${this.getName()}`);
-		this._driver = this.getDriver();
 
 		// register capability listener
-		this.registerCapabilityListener('onoff', this.onCapabilityOnoff.bind(this));
+		this.registerCapabilityListener('onoff', (value) => {
+			// this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
+			this.getDriver().switchCircleOnoff(this.getData().id, value);
+			return Promise.resolve(true);
+		});
 
 		// start polling mqtt server for circle data and update the state
 		this.intervalIdDevicePoll = setInterval(() => {
 			try {
-				if (this._driver.hasOwnProperty('mqttClient')) {
-					if (! this._driver.mqttClient.connected) {
-						return this.setUnavailable('No MQTT broker connection').catch(this.error)
+				const driver = this.getDriver();
+				if (Object.prototype.hasOwnProperty.call(driver, 'mqttClient')) {
+					if (!driver.mqttClient.connected) {
+						this.setUnavailable('No MQTT broker connection').catch(this.error);
+						return;
 					}
 				}
-				this._driver.checkCircleState(this.getData().id);
+				driver.checkCircleState(this.getData().id);
 			} catch (error) { this.log('intervalIdDevicePoll error', error); }
 		}, 1000 * this.getSetting('pollingInterval'));
 	}
@@ -33,14 +38,6 @@ class Circle extends Homey.Device {
 	// this method is called when the Device is deleted
 	onDeleted() {
 		this.log(`device deleted: ${this.getData().id} ${this.getName()}`);
-	}
-
-	// this method is called when the Device has requested a state change (turned on or off)
-	onCapabilityOnoff(value, opts) {
-		this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
-		this._driver.switchCircleOnoff(this.getData().id, value);
-		return Promise.resolve(true);
-		// return Promise.reject(new Error('Switching the device failed!'));
 	}
 
 	// this method is called when the user has changed the device's settings in Homey.
@@ -74,10 +71,15 @@ class Circle extends Homey.Device {
 		}
 
 		// report available or unavailable
-		if (circleState.online === false) {
-			this.setUnavailable('Device not online')
+		if (this.getAvailable()) {
+			if (circleState.online === false) {
+				this.setUnavailable('Device not online')
+					.catch(this.error);
+			}
+		} else if (circleState.online === true) {
+			this.setAvailable()
 				.catch(this.error);
-		} else { this.setAvailable().catch(this.error);	}
+		}
 
 		// update the info presented in the device settings
 		const settings = this.getSettings();
@@ -118,8 +120,8 @@ circleState: {
 	location: e.g. '1st floor' // location of circle in pw2py
 	online: true or false
 	lastseen: e.g. 1475524537  // timestamp when circle was last seen by circle+ or by pw2py?
-	monitor: true or false // Autonomous messages are published when monitoring = true and savelog = true
-	savelog: true or false // Autonomous messages are published when monitoring = true and savelog = true
+	monitor: true or false // Autonomous messages are published when monitoring && savelog = true
+	savelog: true or false // Autonomous messages are published when monitoring && savelog = true
 	interval: e.g. 60  // circle buffer power measure integration interval in minutes?
 	readonly: true or false
 	schedule: 'on' or 'off'

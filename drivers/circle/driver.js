@@ -4,11 +4,13 @@ const Homey = require('homey');
 const mqtt = require('mqtt');
 // const util = require('util');
 
-// this driver handles the mqtt broker communication and keeps a list of all circles and states (including non-paired)
+// this driver handles the mqtt broker communication and keeps a list of all
+// circles and states (including non-paired)
 class Pw2pyDriver extends Homey.Driver {
 
 	onInit() {
 		this.log('Pw2pyDriver onInit');
+
 		// init some variables
 		this.allCirclesState = {};		// latest state of all pw2py devices
 		this.allCirclesEnergy = {};		// latest energy state of all pw2py devices
@@ -36,7 +38,7 @@ class Pw2pyDriver extends Homey.Driver {
 			try {
 				if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) { return reject('there are no settings'); }
 				if (this.mqttClient !== undefined) {
-					this.log('ending mqtt client session');
+					this.log('ending previous mqtt client session');
 					this.mqttClient.end();
 				}
 				const host = `mqtt://${this.mqttSettings.ip_mqtt}:${this.mqttSettings.port_mqtt}`;
@@ -122,7 +124,7 @@ class Pw2pyDriver extends Homey.Driver {
 		this.allCirclesState[circleState.mac] = circleState;	// update allCirclesState
 		try {
 			const device = this.getDevice({ id: circleState.mac });
-			if (device.hasOwnProperty('__ready')) {
+			if (Object.prototype.hasOwnProperty.call(device, '__ready')) {
 				device.updateCircleState(circleState);
 			}
 		} catch (error) {
@@ -134,7 +136,7 @@ class Pw2pyDriver extends Homey.Driver {
 		this.allCirclesEnergy[circleEnergy.mac] = circleEnergy;	// update allCirclesState
 		try {
 			const device = this.getDevice({ id: circleEnergy.mac });
-			if (device.hasOwnProperty('__ready')) {
+			if (Object.prototype.hasOwnProperty.call(device, '__ready')) {
 				// this.log(circleEnergy);
 				device.updateCircleEnergy(circleEnergy);
 			}
@@ -154,7 +156,7 @@ class Pw2pyDriver extends Homey.Driver {
 					const tmpDevice = {
 						name: circles[circle].name,
 						data: { id: circles[circle].mac	},
-						settings: { name: circles[circle].name },	// pw2py name of device as found during pairing
+						settings: { name: circles[circle].name },	// pw2py name of device
 						capabilities: ['onoff', 'measure_power', 'meter_power'],
 					};
 					deviceList.push(tmpDevice);
@@ -196,8 +198,7 @@ class Pw2pyDriver extends Homey.Driver {
 					};
 				const testClient = mqtt.connect(testHost, testOptions);
 				testClient
-					.on('connect', (connack) => {
-						// this.log(connack);
+					.on('connect', () => {
 						this.log(`client is connected? : ${testClient.connected}`);
 						testClient.end();
 						// client is connected, settings are correct!
@@ -208,10 +209,12 @@ class Pw2pyDriver extends Homey.Driver {
 						testClient.end();
 						return reject(Error('incorrect ip address or port?'));
 					})
-					// .on('reconnect', () => {	// when offline the MQTT module will automatically try to reconnect
+					// when offline the MQTT module will automatically try to reconnect
+					// .on('reconnect', () => {
 					// 	this.log('reconnect started');
 					// })
-					// .on('close', () => {	// if reconnect fails, the connection is closed and reconnect will start again
+					// if reconnect fails, the connection is closed and reconnect will start again
+					// .on('close', () => {
 					// 	this.log('client closed');
 					// })
 					.on('error', (error) => {
@@ -221,6 +224,9 @@ class Pw2pyDriver extends Homey.Driver {
 						// send result back to settings html
 						return reject(error);
 					});
+				return setTimeout(() => {
+					reject(Error('Timeout'));
+				}, 10000);
 			} catch (error) {
 				this.error('error while validating settings: ', error);
 				return reject(error);
