@@ -120,11 +120,10 @@ class Pw2pyDriver extends Homey.Driver {
 	}
 
 	handleNewCircleState(circleState) {
-		// this.log(circleState.mac);
 		this.allCirclesState[circleState.mac] = circleState;	// update allCirclesState
 		try {
 			const device = this.getDevice({ id: circleState.mac });
-			if (Object.prototype.hasOwnProperty.call(device, '__ready')) {
+			if (device instanceof Homey.Device) {
 				device.updateCircleState(circleState);
 			}
 		} catch (error) {
@@ -136,8 +135,7 @@ class Pw2pyDriver extends Homey.Driver {
 		this.allCirclesEnergy[circleEnergy.mac] = circleEnergy;	// update allCirclesState
 		try {
 			const device = this.getDevice({ id: circleEnergy.mac });
-			if (Object.prototype.hasOwnProperty.call(device, '__ready')) {
-				// this.log(circleEnergy);
+			if (device instanceof Homey.Device) {
 				device.updateCircleEnergy(circleEnergy);
 			}
 		} catch (error) {

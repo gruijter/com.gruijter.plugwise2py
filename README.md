@@ -57,7 +57,7 @@ If you really like it you can buy me a beer, or coffee, or whatever you like :)
 
 Version changelog
 ```
-v2.0.1  2017.11.18 Code optimizations.
+v2.0.2  2017.11.25 hotfix for Homey fw 1.5.6
 v2.0.0  2017.11.15 Complete code rewrite to SDK V2.
 ```
 
