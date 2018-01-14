@@ -11,7 +11,7 @@
 		"en": [ "plugwise", "energy monitoring" ],
 		"en": [ "plugwise", "energie meten"  ]
 	},
-  "version": "2.0.2",
+  "version": "2.0.3",
   "compatibility": ">= 1.5",
 	"sdk": 2,
   "author": {
@@ -80,8 +80,8 @@
               "id": "pollingInterval",
               "type": "number",
               "label": {
-                "en": "polling interval (seconds)",
-                "nl": "polling interval (seconden)"
+                "en": "polling interval (s)",
+                "nl": "polling interval (s)"
               },
               "attr": { "min": 10 },
               "value": 20

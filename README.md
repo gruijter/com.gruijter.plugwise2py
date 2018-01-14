@@ -57,7 +57,8 @@ If you really like it you can buy me a beer, or coffee, or whatever you like :)
 
 Version changelog
 ```
-v2.0.2  2017.11.25 hotfix for Homey fw 1.5.6
+v2.0.3	2018.01.14 Security fix (mqtt module)
+v2.0.2  2017.11.25 Hotfix for Homey fw 1.5.6
 v2.0.0  2017.11.15 Complete code rewrite to SDK V2.
 ```
 
