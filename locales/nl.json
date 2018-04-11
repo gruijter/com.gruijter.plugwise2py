@@ -1,5 +1,9 @@
 {
 "Plugwise2py settings"              : "Plugwise2py instellingen",
+"loggingTitle"					            : "Debug logs",
+"deletelogs"                        : "logs verwijderen",
+"getlogs"                           : "logs verversen",
+"settingsTitle"					            : "Instellingen",
 "MQTT broker settings"              : "MQTT broker instellingen",
 "ip_mqtt"                           : "IP adres",
 "port_mqtt"                         : "Poort",

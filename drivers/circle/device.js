@@ -1,3 +1,22 @@
+/*
+Copyright 2016 - 2018, Robin de Gruijter (gruijter@hotmail.com)
+
+This file is part of com.gruijter.plugwise2py.
+
+com.gruijter.plugwise2py is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+com.gruijter.plugwise2py is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 'use strict';
 
 const Homey = require('homey');
@@ -7,25 +26,24 @@ class Circle extends Homey.Device {
 	// this method is called when the Device is inited
 	onInit() {
 		this.log(`device init ${this.getClass()} ${this.getData().id} ${this.getName()}`);
-
+		clearInterval(this.intervalIdDevicePoll);	// if polling, stop polling
+		this.driver = this.getDriver();
 		// register capability listener
 		this.registerCapabilityListener('onoff', (value) => {
 			// this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
-			this.getDriver().switchCircleOnoff(this.getData().id, value);
+			this.driver.switchCircleOnoff(this.getData().id, value);
 			return Promise.resolve(true);
 		});
-
 		// start polling mqtt server for circle data and update the state
 		this.intervalIdDevicePoll = setInterval(() => {
 			try {
-				const driver = this.getDriver();
-				if (Object.prototype.hasOwnProperty.call(driver, 'mqttClient')) {
-					if (!driver.mqttClient.connected) {
+				if (Object.prototype.hasOwnProperty.call(this.driver, 'mqttClient')) {
+					if (!this.driver.mqttClient.connected) {
 						this.setUnavailable('No MQTT broker connection').catch(this.error);
 						return;
 					}
+					this.driver.checkCircleState(this.getData().id);
 				}
-				driver.checkCircleState(this.getData().id);
 			} catch (error) { this.log('intervalIdDevicePoll error', error); }
 		}, 1000 * this.getSetting('pollingInterval'));
 	}
@@ -38,6 +56,7 @@ class Circle extends Homey.Device {
 	// this method is called when the Device is deleted
 	onDeleted() {
 		this.log(`device deleted: ${this.getData().id} ${this.getName()}`);
+		clearInterval(this.intervalIdDevicePoll);
 	}
 
 	// this method is called when the user has changed the device's settings in Homey.
@@ -90,7 +109,7 @@ class Circle extends Homey.Device {
 			mac: circleState.mac,
 			pollingInterval: settings.pollingInterval,
 			type,
-			lastseen: `${new Date(circleState.lastseen * 1000).toLocaleString().split(':')[0]}:xx`,
+			lastseen: `${new Date(circleState.lastseen * 1000).toLocaleString().split(':')[0]}:xx (UTC)`,
 			production: circleState.production.toString(),
 			pwName: circleState.name,
 			location: circleState.location,

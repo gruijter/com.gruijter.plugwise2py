@@ -1,3 +1,22 @@
+/*
+Copyright 2016 - 2018, Robin de Gruijter (gruijter@hotmail.com)
+
+This file is part of com.gruijter.plugwise2py.
+
+com.gruijter.plugwise2py is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+com.gruijter.plugwise2py is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 'use strict';
 
 const Homey = require('homey');
@@ -9,28 +28,30 @@ const mqtt = require('mqtt');
 class Pw2pyDriver extends Homey.Driver {
 
 	onInit() {
+		if (this.initBusy) {
+			this.log('Pw2pyDriver onInit already busy');
+			return;
+		}
 		this.log('Pw2pyDriver onInit');
-
 		// init some variables
+		this.initBusy = true;
 		this.allCirclesState = {};		// latest state of all pw2py devices
 		this.allCirclesEnergy = {};		// latest energy state of all pw2py devices
 		this.mqttSettings = Homey.ManagerSettings.get('settings');
-
-		this.connectHost()	// connect to mqtt host
-			.then(() => {
-				this.subscribeState();	// subscribe to plugwise2py MQTT broker - circle state
-			})
-			.catch((error) => {
-				this.error(error);
-			});
-
-		// Fired when an app setting has changed
-		Homey.ManagerSettings.on('set', (changedKey) => {
+		Homey.ManagerSettings.on('set', (changedKey) => {	// Fired when an app setting has changed
 			if (changedKey === 'settings') {		// save button is pressed, reconnect must be initiated
 				this.log(changedKey);
 				this.onInit();
 			}
 		});
+		this.connectHost()	// connect to mqtt host
+			.then(() => {
+				this.initBusy = false;
+			})
+			.catch((error) => {
+				this.error(error);
+				this.initBusy = false;
+			});
 	}
 
 	connectHost() {
@@ -48,50 +69,50 @@ class Pw2pyDriver extends Homey.Driver {
 						clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
 						username: this.mqttSettings.username_mqtt,
 						password: this.mqttSettings.password_mqtt,
+						keepalive: 60,
 						reconnectPeriod: 10000,
+						clean: true,
+						queueQoSZero: false,
 					};
 				this.mqttClient = mqtt.connect(host, options);
 				this.mqttClient
-					.on('error', (error) => { this.log(error); })
+					.on('error', (error) => { this.error(error); })
 					.on('offline', () => { this.log('mqtt broker is offline'); })
 					.on('reconnect', () => { this.log('client is trying to reconnect'); })
-					.on('close', () => { this.log('client closed');	});
+					.on('close', () => { this.log('client closed (disconnected)');	})
+					.on('end', () => { this.log('client ended');	})
+					.on('connect', (connack) => {
+						this.log(`mqtt connection ok: ${JSON.stringify(connack)}`);
+						// this.log('subscribing to plugwise2py/state/circle/# and plugwise2py/state/energy/#');
+						this.mqttClient.subscribe(['plugwise2py/state/circle/#', 'plugwise2py/state/energy/#'], {}, (err, granted) => {
+							if (err) this.error(`mqtt subscription error: ${err}`); else this.log(`mqtt subscription ok: ${JSON.stringify(granted)}`);
+						});
+					})
+					.on('message', (topic, message) => {		// handle incoming messages
+						// this.log(`message received from topic: ${topic}`);
+						if (message.length > 0) {	// won't crash but question is why empty?
+							let circleState;
+							let circleEnergy;
+							switch (topic.substr(0, 25)) {
+								case 'plugwise2py/state/circle/':
+									circleState = this.tryParseJSON(message.toString());
+									this.handleNewCircleState(circleState);
+									break;
+								case 'plugwise2py/state/energy/':
+									circleEnergy = this.tryParseJSON(message.toString());
+									this.handleNewEnergyState(circleEnergy);
+									break;
+								default:
+									break;
+							}
+						}
+					});
 				return resolve(true);
 			} catch (error) {
-				this.log('error during connectHost');
+				this.error('error during connectHost');
 				return reject(error);
 			}
 		});
-	}
-
-	subscribeState() {
-		this.mqttClient
-			.on('connect', (connack) => {
-				this.log('mqtt connection successfull ', connack);
-				this.mqttClient.subscribe('plugwise2py/state/circle/#');
-				this.log('subscribing to plugwise2py/state/circle/#');
-				this.mqttClient.subscribe('plugwise2py/state/energy/#');
-				this.log('subscribing to plugwise2py/state/energy/#');
-			})
-			.on('message', (topic, message) => {		// handle incoming messages
-				// this.log(`message received from topic: ${topic}`);
-				if (message.length > 0) {	// won't crash but question is why empty?
-					let circleState;
-					let circleEnergy;
-					switch (topic.substr(0, 25)) {
-						case 'plugwise2py/state/circle/':
-							circleState = this.tryParseJSON(message.toString());
-							this.handleNewCircleState(circleState);
-							break;
-						case 'plugwise2py/state/energy/':
-							circleEnergy = this.tryParseJSON(message.toString());
-							this.handleNewEnergyState(circleEnergy);
-							break;
-						default:
-							break;
-					}
-				}
-			});
 	}
 
 	onPairListDevices(data, callback) {
@@ -106,17 +127,30 @@ class Pw2pyDriver extends Homey.Driver {
 	}
 
 	checkCircleState(circleId) {
-		this.mqttClient.publish(`plugwise2py/cmd/reqstate/${circleId}`, JSON.stringify({ mac: '', cmd: 'reqstate', val: '1' }));
+		const cmd = {
+			mac: '',
+			cmd: 'reqstate',
+			val: '1',
+		};
+		this.mqttClient.publish(`plugwise2py/cmd/reqstate/${circleId}`, JSON.stringify(cmd),
+			{}, (err) => {
+				if (err) this.error(`checkCircleState publish error: ${err}`);
+			});
 	//    Homey.log('polling state of: '+circleId);
 	}
+
 	switchCircleOnoff(circleId, onoff) {
-		if (onoff) {
-			this.mqttClient.publish(`plugwise2py/cmd/switch/${circleId}`, JSON.stringify({ mac: '', cmd: 'switch', val: 'on' }));
-			this.log(`switching on: ${circleId} ${this.allCirclesState[circleId].name}`);
-		} else {
-			this.mqttClient.publish(`plugwise2py/cmd/switch/${circleId}`, JSON.stringify({ mac: '', cmd: 'switch', val: 'off' }));
-			this.log(`switching off: ${circleId} ${this.allCirclesState[circleId].name}`);
-		}
+		const cmd = {
+			mac: '',
+			cmd: 'switch',
+			val: 'off',
+		};
+		if (onoff) { cmd.val = 'on'; }
+		this.log(`switching ${cmd.val}: ${circleId} ${this.allCirclesState[circleId].name}`);
+		this.mqttClient.publish(`plugwise2py/cmd/switch/${circleId}`, JSON.stringify(cmd),
+			{}, (err) => {
+				if (err) this.error(`switchCircleOnOff publish error: ${err}`);
+			});
 	}
 
 	handleNewCircleState(circleState) {
@@ -127,7 +161,7 @@ class Pw2pyDriver extends Homey.Driver {
 				device.updateCircleState(circleState);
 			}
 		} catch (error) {
-			this.log(error);
+			this.error(error);
 		}
 	}
 
@@ -139,7 +173,7 @@ class Pw2pyDriver extends Homey.Driver {
 				device.updateCircleEnergy(circleEnergy);
 			}
 		} catch (error) {
-			this.log(error);
+			this.error(error);
 		}
 	}
 

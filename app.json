@@ -9,15 +9,17 @@
   },
 	"tags": {
 		"en": [ "plugwise", "energy monitoring" ],
-		"en": [ "plugwise", "energie meten"  ]
+		"nl": [ "plugwise", "energie meten"  ]
 	},
-  "version": "2.0.3",
+  "version": "2.0.4",
   "compatibility": ">= 1.5",
 	"sdk": 2,
-  "author": {
-      "name": "Gruijter",
+	"author": {
+      "name": "Robin de Gruijter",
       "email": "gruijter@hotmail.com"
   },
+  "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
+  "license": " GPL-3.0-or-later",
 	"contributing": {
 		"donate": {
 			"paypal": {
