@@ -57,6 +57,7 @@ If you really like it you can buy me a beer, or coffee, or whatever you like :)
 
 Version changelog
 ```
+v2.0.5	2018.09.04 MQTT update v2.18.8. Memory usage reduction.
 v2.0.4	2018.04.07 MQTT update v2.17.0. Log module added. Stability improvements.
 v2.0.3	2018.01.14 Security fix (mqtt module)
 v2.0.2  2017.11.25 Hotfix for Homey fw 1.5.6

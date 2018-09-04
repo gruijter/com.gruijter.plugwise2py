@@ -57,6 +57,10 @@ class settingsBackend extends Homey.App {
 				// 	driver.onInit();
 				// }, 60000);
 			});
+		// do garbage collection every 10 minutes
+		this.intervalIdGc = setInterval(() => {
+			global.gc();
+		}, 1000 * 60 * 10);
 	}
 
 	//  stuff for frontend API

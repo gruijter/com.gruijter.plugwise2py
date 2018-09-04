@@ -57,7 +57,7 @@ class Pw2pyDriver extends Homey.Driver {
 	connectHost() {
 		return new Promise((resolve, reject) => {
 			try {
-				if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) { return reject('there are no settings'); }
+				if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) { return reject(Error('there are no settings')); }
 				if (this.mqttClient !== undefined) {
 					this.log('ending previous mqtt client session');
 					this.mqttClient.end();
@@ -84,9 +84,14 @@ class Pw2pyDriver extends Homey.Driver {
 					.on('connect', (connack) => {
 						this.log(`mqtt connection ok: ${JSON.stringify(connack)}`);
 						// this.log('subscribing to plugwise2py/state/circle/# and plugwise2py/state/energy/#');
-						this.mqttClient.subscribe(['plugwise2py/state/circle/#', 'plugwise2py/state/energy/#'], {}, (err, granted) => {
-							if (err) this.error(`mqtt subscription error: ${err}`); else this.log(`mqtt subscription ok: ${JSON.stringify(granted)}`);
-						});
+						this.mqttClient.subscribe(
+							['plugwise2py/state/circle/#', 'plugwise2py/state/energy/#'],
+							{},
+							(err, granted) => {
+								if (err) this.error(`mqtt subscription error: ${err}`);
+								else this.log(`mqtt subscription ok: ${JSON.stringify(granted)}`);
+							},
+						);
 					})
 					.on('message', (topic, message) => {		// handle incoming messages
 						// this.log(`message received from topic: ${topic}`);
@@ -132,10 +137,14 @@ class Pw2pyDriver extends Homey.Driver {
 			cmd: 'reqstate',
 			val: '1',
 		};
-		this.mqttClient.publish(`plugwise2py/cmd/reqstate/${circleId}`, JSON.stringify(cmd),
-			{}, (err) => {
-				if (err) this.error(`checkCircleState publish error: ${err}`);
-			});
+		this.mqttClient.publish(
+			`plugwise2py/cmd/reqstate/${circleId}`,	// topic
+			JSON.stringify(cmd),	// message
+			// {},	// options
+			// (err) => {	// callback
+			// 	if (err) this.error(`checkCircleState publish error: ${err}`);
+			// },
+		);
 	//    Homey.log('polling state of: '+circleId);
 	}
 
@@ -147,10 +156,14 @@ class Pw2pyDriver extends Homey.Driver {
 		};
 		if (onoff) { cmd.val = 'on'; }
 		this.log(`switching ${cmd.val}: ${circleId} ${this.allCirclesState[circleId].name}`);
-		this.mqttClient.publish(`plugwise2py/cmd/switch/${circleId}`, JSON.stringify(cmd),
-			{}, (err) => {
+		this.mqttClient.publish(
+			`plugwise2py/cmd/switch/${circleId}`,	// topic
+			JSON.stringify(cmd), // message
+			{},	// options
+			(err) => {	// callback
 				if (err) this.error(`switchCircleOnOff publish error: ${err}`);
-			});
+			},
+		);
 	}
 
 	handleNewCircleState(circleState) {

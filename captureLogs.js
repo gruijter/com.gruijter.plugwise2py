@@ -67,12 +67,12 @@ class captureLogs {
 	}
 	deleteLogs() {
 		// this.log('deleting logs from frontend');
+		this.logArray = [];
 		fs.unlink(this.logFile, (err) => {
 			if (err) {
 				Homey.app.error('error deleting logfile: ', err.message);
 				return err;
 			}
-			this.logArray = [];
 			Homey.app.log('logfile deleted');
 			return true;
 		});

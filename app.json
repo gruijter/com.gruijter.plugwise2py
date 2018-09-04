@@ -11,7 +11,7 @@
 		"en": [ "plugwise", "energy monitoring" ],
 		"nl": [ "plugwise", "energie meten"  ]
 	},
-  "version": "2.0.4",
+  "version": "2.0.5",
   "compatibility": ">= 1.5",
 	"sdk": 2,
 	"author": {
@@ -27,7 +27,6 @@
 			}
 		}
 	},
-
   "images": {
     "large": "./assets/images/large.jpg",
     "small": "./assets/images/small.jpg"
