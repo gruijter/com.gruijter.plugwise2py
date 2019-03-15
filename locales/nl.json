@@ -1,22 +1,41 @@
 {
-"Plugwise2py settings"              : "Plugwise2py instellingen",
-"loggingTitle"					            : "Debug logs",
-"deletelogs"                        : "logs verwijderen",
-"getlogs"                           : "logs verversen",
-"settingsTitle"					            : "Instellingen",
-"MQTT broker settings"              : "MQTT broker instellingen",
-"ip_mqtt"                           : "IP adres",
-"port_mqtt"                         : "Poort",
-"username_mqtt"                     : "Gebruikersnaam",
-"password_mqtt"                     : "Wachtwoord",
-"Plugwise2py webinterface settings" : "Plugwise2py webinterface instellingen",
-"ip_pw2py"                          : "IP addres",
-"port_pw2py"                        : "Poort",
-"Clear"                             : "Wissen",
-"Test"                              : "Test",
-"Control"                           : "Besturing",
-"Config"                            : "Configuratie",
-"Save"                              : "Opslaan",
-"correctSettings"										: "Succes: de MQTT instellingen zijn juist. Sla ze nu op!",
-"settingsSaved"											: "De instellingen zijn opgeslagen"
+	"settings": {
+		"benefit": "Uitlezen en besturen van Plugwise Circles",
+		"tab1": {
+			"title": "Instructies",
+			"appDescriptionTitle": "About this app",
+			"appDescription": "Meet energieverbruik, en schakel apparaten via Plugwise Circles. Deze app gebruikt Plugwise-2-Py (PW2Py) als  alternatief voor de Plugwise Source PC software. Het werkt niet met Plugwise Stretch.",
+			"pw2pySetupTitle": "Installeren PW2Py",
+			"pw2pySetupInstructions": "Als eerste moet Plugwise-2-Py worden geinstalleerd op een Raspberry Pi. Installatie instructies zijn hier te vinden: <a href='https://github.com/SevenW/Plugwise-2-py' target='_blank'>https://github.com/SevenW/Plugwise-2-py</a> .",
+			"addDeviceTitle": "Voeg Circles toe aan Homey",
+			"addDeviceInstructions": "Als je Plugwise-2-Py hebt geinstalleerd en geconfigureerd, en je hebt een MQTT hub geconfigureerd, kun je beginnen met de Homey app configuratie. Ga naar de App Instellingen tab, en vul het MQTT IP adres in. Sla de instellingen o pals de test succesvol is. Het toevoegen van Circles gaat via Homey 'Apparaten'."
+		},
+		"tab2": {
+			"title": "Instellingen",
+			"ip_mqtt": "MQTT IP adres",
+			"port_mqtt": "MQTT Poort",
+			"username_mqtt": "MQTT Gebruikersnaam",
+			"password_mqtt": "MQTT Wachtwoord",
+			"test": "Test instellingen",
+			"save": "Opslaan",
+			"correctSettings": "Succes: de MQTT instellingen zijn juist. Sla ze nu op!",
+			"settingsSaved": "De instellingen zijn opgeslagen"
+		},
+		"tab3": {
+			"title": "PW2Py",
+			"openControlURL": "Besturing Web pagina",
+			"openSettingsURL": "Instellingen Web pagina",
+			"ip_pw2py": "PW2Py IP adres",
+			"port_pw2py": "PW2Py Poort",
+			"save": "Opslaan",
+			"settingsSaved": "De instellingen zijn opgeslagen"
+		},
+		"tab4": {
+			"title": "Logs",
+			"logs": "Logs",
+			"deleteLogs": "Verwijder logs",
+			"deleteWarning": "Verwijder alle logs?",
+			"deleted": "Logs verwijderd!"
+		}
+	}
 }

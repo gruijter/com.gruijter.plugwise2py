@@ -1,14 +1,14 @@
 {
 	"settings": {
-		"benefit": "Monitor and Control plugwise circles",
+		"benefit": "Monitor and Control Plugwise Circles",
 		"tab1": {
 			"title": "Instructions",
 			"appDescriptionTitle": "About this app",
-			"appDescription": "Monitor power usage, and control devices via plugwise circles. This app uses Plugwise-2-Py (PW2Py) as an alternative for the Plugwise Source PC software. It does not work with Plugwise Stretch.",
+			"appDescription": "Monitor power usage, and control devices via Plugwise Circles. This app uses Plugwise-2-Py (PW2Py) as an alternative for the Plugwise Source PC software. It does not work with Plugwise Stretch.",
 			"pw2pySetupTitle": "Setup PW2Py",
 			"pw2pySetupInstructions": "You first need to setup Plugwise-2-Py on a Raspberry Pi. Setup instructions can be found here: <a href='https://github.com/SevenW/Plugwise-2-py' target='_blank'>https://github.com/SevenW/Plugwise-2-py</a> .",
-			"addDeviceTitle": "Add circles to Homey",
-			"addDeviceInstructions": "When you have installed and configured Plugwise-2-Py, and have configured a MQTT hub, you can start configuring the Homey app. Go to the app settings tab and enter the MQTT IP address. Save after successfull  testing. Adding circles is done through the Homey tab 'devices'."
+			"addDeviceTitle": "Add Circles to Homey",
+			"addDeviceInstructions": "When you have installed and configured Plugwise-2-Py, and have configured a MQTT hub, you can start configuring the Homey app. Go to the app settings tab and enter the MQTT IP address. Save after successfull testing. Adding Circles is done through the Homey tab 'devices'."
 		},
 		"tab2": {
 			"title": "Settings",
