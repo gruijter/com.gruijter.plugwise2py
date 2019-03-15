@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2018, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -67,9 +67,11 @@ class settingsBackend extends Homey.App {
 	deleteLogs() {
 		return this.logger.deleteLogs();
 	}
+
 	getLogs() {
 		return this.logger.logArray;
 	}
+
 	// check the settings for frontend via api
 	validateSettings(settings) {
 		return new Promise((resolve, reject) => {

@@ -55,19 +55,11 @@ If you really like it you can buy me a beer, or coffee, or whatever you like :)
 
 ===============================================================================
 
-Version changelog
-```
-v2.0.5	2018.09.04 MQTT update v2.18.8. Memory usage reduction.
-v2.0.4	2018.04.07 MQTT update v2.17.0. Log module added. Stability improvements.
-v2.0.3	2018.01.14 Security fix (mqtt module)
-v2.0.2  2017.11.25 Hotfix for Homey fw 1.5.6
-v2.0.0  2017.11.15 Complete code rewrite to SDK V2
-v1.0.0  2016.12.04 MQTT client updated to v2.1.3. Minor code changes
-v0.0.1  2016.09.30 Initial release
-```
+Version changelog: [changelog.txt]
 
 [plugwise-2-py]: https://github.com/SevenW/Plugwise-2-py
 [Seven Watt]: https://github.com/SevenW
 [forum]: https://forum.athom.com/discussion/1998
 [pp-donate-link]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VLB7J3MQLVT2G
 [pp-donate-image]: https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif
+[changelog.txt]: https://github.com/gruijter/com.gruijter.plugwise2py/blob/master/changelog.txt

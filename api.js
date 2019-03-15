@@ -2,7 +2,7 @@ const Homey = require('homey');
 
 module.exports = [
 	{
-		description:	'Validate settings',
+		description: 'Validate settings',
 		method: 'POST',
 		path: '/validate',
 		requires_authorization: true,

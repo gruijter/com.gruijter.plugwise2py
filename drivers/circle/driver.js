@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2018, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -63,17 +63,16 @@ class Pw2pyDriver extends Homey.Driver {
 					this.mqttClient.end();
 				}
 				const host = `mqtt://${this.mqttSettings.ip_mqtt}:${this.mqttSettings.port_mqtt}`;
-				const options =
-					{
-						port: this.mqttSettings.port_mqtt,
-						clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
-						username: this.mqttSettings.username_mqtt,
-						password: this.mqttSettings.password_mqtt,
-						keepalive: 60,
-						reconnectPeriod: 10000,
-						clean: true,
-						queueQoSZero: false,
-					};
+				const options =	{
+					port: this.mqttSettings.port_mqtt,
+					clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
+					username: this.mqttSettings.username_mqtt,
+					password: this.mqttSettings.password_mqtt,
+					keepalive: 60,
+					reconnectPeriod: 10000,
+					clean: true,
+					queueQoSZero: false,
+				};
 				this.mqttClient = mqtt.connect(host, options);
 				this.mqttClient
 					.on('error', (error) => { this.error(error); })
@@ -232,15 +231,14 @@ class Pw2pyDriver extends Homey.Driver {
 		return new Promise((resolve, reject) => {
 			try {
 				const testHost = `mqtt://${settings.ip_mqtt}:${settings.port_mqtt}`;
-				const testOptions =
-					{
-						port: settings.port_mqtt,
-						clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
-						username: settings.username_mqtt,
-						password: settings.password_mqtt,
-						// connectTimeout: 20 * 1000,
-						// keepalive: 0,
-					};
+				const testOptions =	{
+					port: settings.port_mqtt,
+					clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
+					username: settings.username_mqtt,
+					password: settings.password_mqtt,
+					// connectTimeout: 20 * 1000,
+					// keepalive: 0,
+				};
 				const testClient = mqtt.connect(testHost, testOptions);
 				testClient
 					.on('connect', () => {

@@ -1,22 +1,41 @@
 {
-"Plugwise2py settings"              : "Plugwise2py settings",
-"loggingTitle"					            : "Debug logs",
-"deletelogs"                        : "Delete logs",
-"getlogs"                           : "Refresh logs",
-"settingsTitle"					            : "Settings",
-"MQTT broker settings"              : "MQTT broker settings",
-"ip_mqtt"                           : "IP address",
-"port_mqtt"                         : "Port",
-"username_mqtt"                     : "Username",
-"password_mqtt"                     : "Password",
-"Plugwise2py webinterface settings" : "Plugwise2py webinterface settings",
-"ip_pw2py"                          : "IP address",
-"port_pw2py"                        : "Port",
-"Clear"                             : "Clear",
-"Test"                              : "Test",
-"Control"                           : "Control",
-"Config"                            : "Config",
-"Save"                              : "Save",
-"correctSettings"										: "Success: the MQTT settings are correct. Now save them!",
-"settingsSaved"											: "The settings have been saved"
+	"settings": {
+		"benefit": "Monitor and Control plugwise circles",
+		"tab1": {
+			"title": "Instructions",
+			"appDescriptionTitle": "About this app",
+			"appDescription": "Monitor power usage, and control devices via plugwise circles. This app uses Plugwise-2-Py (PW2Py) as an alternative for the Plugwise Source PC software. It does not work with Plugwise Stretch.",
+			"pw2pySetupTitle": "Setup PW2Py",
+			"pw2pySetupInstructions": "You first need to setup Plugwise-2-Py on a Raspberry Pi. Setup instructions can be found here: <a href='https://github.com/SevenW/Plugwise-2-py' target='_blank'>https://github.com/SevenW/Plugwise-2-py</a> .",
+			"addDeviceTitle": "Add circles to Homey",
+			"addDeviceInstructions": "When you have installed and configured Plugwise-2-Py, and have configured a MQTT hub, you can start configuring the Homey app. Go to the app settings tab and enter the MQTT IP address. Save after successfull  testing. Adding circles is done through the Homey tab 'devices'."
+		},
+		"tab2": {
+			"title": "Settings",
+			"ip_mqtt": "MQTT IP address",
+			"port_mqtt": "MQTT Port",
+			"username_mqtt": "MQTT Username",
+			"password_mqtt": "MQTT Password",
+			"test": "Test settings",
+			"save": "Save",
+			"correctSettings": "Success: the MQTT settings are correct. Now save them!",
+			"settingsSaved": "The settings have been saved"
+		},
+		"tab3": {
+			"title": "PW2Py",
+			"openControlURL": "Control Web page",
+			"openSettingsURL": "Settings Web page",
+			"ip_pw2py": "PW2Py IP address",
+			"port_pw2py": "PW2Py Port",
+			"save": "Save",
+			"settingsSaved": "The settings have been saved"
+		},
+		"tab4": {
+			"title": "Logs",
+			"logs": "Logs",
+			"deleteLogs": "Delete logs",
+			"deleteWarning": "Delete all logs?",
+			"deleted": "Logs deleted!"
+		}
+	}
 }

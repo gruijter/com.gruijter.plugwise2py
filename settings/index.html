@@ -1,228 +1,98 @@
 <!doctype html>
 <html>
-    <head>
-			<!-- The '/homey.js' script must be included in your settings view to work -->
-	    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
-	    <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
-    </head>
-    <body>
-        <h1 data-i18n="Plugwise2py settings"> </h1>
-				<div id="panel-buttons">
-					<button id="panel-button-1" class="button panel-button" onclick="showPanel(1)" data-i18n="settingsTitle">Settings</button>&nbsp;
-					<button id="panel-button-2" class="button panel-button" onclick="showPanel(2)" data-i18n="loggingTitle">Logging</button>&nbsp;
-					<br><br>
+	<head>
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+		<script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+		<script type="text/javascript" src="settings.js" data-origin="settings"></script>
+		</head>
+	<body>
+		<div id="app">
+			<p data-i18n="settings.benefit" class="benefit">Monitor and Control plugwise</p>
+			<div class="rTable tabs">
+				<div class="rTableRow">
+					<div id="tabb1" class="tab tab-inactive" onclick="showTab(1)" data-i18n="settings.tab1.title">Instructions</div>
+					<div id="tabb2" class="tab tab-inactive" onclick="showTab(2)" data-i18n="settings.tab2.title">App Settings</div>
+					<div id="tabb3" class="tab tab-inactive" onclick="showTab(3)" data-i18n="settings.tab3.title">PW2Py</div>
+					<div id="tabb4" class="tab tab-inactive" onclick="showTab(4)" data-i18n="settings.tab4.title">Log</div>
 				</div>
-				<!-- Settings panel -->
-				<div id="panel-1" class="panel">
-        <fieldset>
-            <legend data-i18n="MQTT broker settings"> </legend>
-            <div class="field row">
-                <label for="ip_mqtt" data-i18n="ip_mqtt"> </label>
-                <input id="ip_mqtt" type="text" placeholder="e.g. 192.168.1.100" value="" />
-            </div>
-            <div class="field row">
-                <label for="port_mqtt" data-i18n="port_mqtt"> </label>
-                <input id="port_mqtt" type="number" value="1883" />
-            </div>
-            <div class="field row">
-                <label for="username_mqtt" data-i18n="username_mqtt"> </label>
-                <input id="username_mqtt" type="text" placeholder="optional" value="" />
-            </div>
-            <div class="field row">
-              <label for="password_mqtt" data-i18n="password_mqtt"> </label>
-              <input id="password_mqtt" type="password" value="" />
-            </div>
-            <div id="testresult"></div>
-            <button class="left" id="button_clear" onclick="clear()" data-i18n="Clear"> </button>
-            <button class="left" id="button_test" onclick="test()" data-i18n="Test"> </button>
-            <button class="right" id="button_save" onclick="save()" data-i18n="Save"> </button>
-        </fieldset>
+			</div>
+			<div class="tab-content">
+				<div style="height:8px" class="panel"></div>
 
-        <fieldset>
-            <legend data-i18n="Plugwise2py webinterface settings"> </legend>
-            <div class="field row">
-                <label for="ip_pw2py" data-i18n="ip_pw2py"> </label>
-                <input id="ip_pw2py" type="text" placeholder="e.g. 192.168.1.100" value="" />
-            </div>
-            <div class="field row">
-                <label for="port_pw2py" data-i18n="port_pw2py"> </label>
-                <input id="port_pw2py" type="number" value="8000" />
-            </div>
-            <button class="left" id="pw2py_control" onclick="pw2pyControl()" data-i18n="Control"> </button>
-            <button class="left" id="pw2py_config" onclick="pw2pyConfig()" data-i18n="Config">  </button>
-            <button class="right" id="pw2py_save" onclick="pw2pySave()" data-i18n="Save"> </button>
-        </fieldset>
+				<!-- Instructions panel -->
+				<div id="tab1" class="panel" style="display: none;">
+					<fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.appDescriptionTitle">About this app</legend>
+						<p data-i18n="settings.tab1.appDescription" class="instructions">Description</p>
+					</fieldset>
+					<fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.pw2pySetupTitle">Setup PW2Py</legend>
+						<p data-i18n="settings.tab1.pw2pySetupInstructions" class="instructions">Instructions</p>
+					</fieldset>
+					<fieldset class="listContainer">
+						<legend data-i18n="settings.tab1.addDeviceTitle">Add circles to Homey</legend>
+						<p data-i18n="settings.tab1.addDeviceInstructions" class="instructions">Instructions</p>
+					</fieldset>
 				</div>
 
-				<!-- Debug logs panel -->
-				<div id="panel-2" class="panel">
-					<button type="button" class="right" id="button_deletelog" onclick="deleteLogs()" data-i18n="deletelogs">Delete Logs</button>
-					<button type="button" class="right" id="button_getlog" onclick="showLogs()" data-i18n="getlogs">Get Logs</button>
-					<div id="loglines"></div>
+				<!-- App settings panel -->
+				<div id="tab2" class="panel" style="display: none;">
+					<label class="settings-item-description" data-i18n="settings.tab2.ip_mqtt">MQTT IP</label>
+					<div class="settings-itemgroup">
+						<input id="ip_mqtt" type="text" value="">
+					</div>
+					<label class="settings-item-description" data-i18n="settings.tab2.port_mqtt">MQTT Port</label>
+					<div class="settings-itemgroup">
+						<input id="port_mqtt" type="text" value="1883">
+					</div>
+					<label class="settings-item-description" data-i18n="settings.tab2.username_mqtt">Username</label>
+					<div class="settings-itemgroup">
+						<input id="username_mqtt" type="text" value="">
+					</div>
+					<label class="settings-item-description" data-i18n="settings.tab2.password_mqtt">Password</label>
+					<div class="settings-itemgroup">
+						<input id="password_mqtt" type="password" value="">
+					</div>
+					<label class="settings-item-description" data-i18n="settings.tab2.test">Save</label>
+					<button id="save" class="btn" onclick="test()" data-i18n="settings.tab2.test">Save</button>
+					<label class="settings-item-description" data-i18n="settings.tab2.save">Save</label>
+					<button id="save" class="btn" onclick="save()" data-i18n="settings.tab2.save">Save</button>
+					
 				</div>
 
-        <script type="text/javascript">
+				<!-- PW2Py control panel -->
+				<div id="tab3" class="panel" style="display: none;">
+					<div class="setting">
+						<label class="settings-item-description" data-i18n="settings.tab3.openControlURL"></label>
+						<button id="control_url" class="btn" onclick="openUrl('/')" data-i18n="settings.tab3.openControlURL">OpenControlUrl</button>
+					</div>
+					<div class="setting">
+						<label class="settings-item-description" data-i18n="settings.tab3.openSettingsURL"></label>
+						<button id="settings_url" class="btn" onclick="openUrl('/cfg-pw2py.html')" data-i18n="settings.tab3.openSettingsURL">OpenSettingsUrl</button>
+					</div>	
+					<label class="settings-item-description" data-i18n="settings.tab3.ip_pw2py">PW2Py IP</label>
+					<div class="settings-itemgroup">
+						<input id="ip_pw2py" type="text" value="">
+					</div>
+					<label class="settings-item-description" data-i18n="settings.tab3.port_pw2py">PW2Py Port</label>
+					<div class="settings-itemgroup">
+						<input id="port_pw2py" type="text" value="8000">
+					</div>
+					<label class="settings-item-description" data-i18n="settings.tab3.save">Save</label>
+					<button id="save" class="btn" onclick="save()" data-i18n="settings.tab2.save">Save</button>
+				</div>
 
-				function showPanel(panel) {
-					$('.panel').hide()
-					$('.panel-button').removeClass('panel-button-active').addClass('panel-button-inactive')
-					$('#panel-button-' + panel).removeClass('panel-button-inactive').addClass('panel-button-active')
-					$('#panel-' + panel).show()
-					if (panel === 2) {
-						showLogs();
-					}
-				}
-
-        var saveData;
-        var HomeyAPI = null;
-				var ipMqttElement;
-				var portMqttElement;
-				var usernameMqttElement;
-				var passwordMqttElement;
-				var testResultElement;
-				var clearElement;
-				var testElement;
-				var saveElement;
-				var ipPw2pyElement;
-				var portPw2pyElement;
-				var pw2pyControlElement;
-				var pw2pyConfigElement;
-				var Pw2pySaveElement;
-
-        // triggered when user opens settings page
-        function onHomeyReady(Homey){
-					HomeyAPI = Homey;
-					ipMqttElement = document.getElementById('ip_mqtt');
-					portMqttElement = document.getElementById('port_mqtt');
-					usernameMqttElement = document.getElementById('username_mqtt');
-					passwordMqttElement = document.getElementById('password_mqtt');
-					testResultElement = document.getElementById('testresult');
-					clearElement = document.getElementById('button_clear');
-					testElement = document.getElementById('button_test');
-					saveElement = document.getElementById('button_save');
-					ipPw2pyElement = document.getElementById('ip_pw2py');
-					portPw2pyElement = document.getElementById('port_pw2py');
-					pw2pyControlElement = document.getElementById('pw2py_control');
-					pw2pyConfigElement = document.getElementById('pw2py_config');
-					Pw2pySaveElement = document.getElementById('pw2py_save');
-
-          testResultElement.innerHTML = " ";
-          // saveElement.disabled = true; // Disable save button until settings have been checked
-
-          Homey.get('settings_pw2py', function(err, storedData) {
-            if (err) {
-              console.log(err);
-            } else {
-              //console.log('got data: ', storedData);
-              if ((storedData != null) && (storedData != undefined)) {
-                ipPw2pyElement.value = storedData.ip_pw2py;
-                portPw2pyElement.value = storedData.port_pw2py;
-              }
-            }
-          });
-
-          Homey.get('settings', function(err, storedData) {
-            if (err) {
-              console.log(err);
-            } else {
-              //console.log('got data: ', storedData);
-              if ((storedData != null) && (storedData != undefined)) {
-                ipMqttElement.value = storedData.ip_mqtt;
-                portMqttElement.value = storedData.port_mqtt;
-                usernameMqttElement.value = storedData.username_mqtt;
-                passwordMqttElement.value = storedData.password_mqtt
-              }
-            }
-						showPanel(1);
-            Homey.ready();  //ready to show the settings page
-          });
-
-				}
-
-				function clear() {
-					ipMqttElement.value = "";
-					portMqttElement.value = 1883;
-					usernameMqttElement.value = "";
-					passwordMqttElement.value = "";
-					testResultElement.innerHTML = " ";
-				}
-
-				function test() {
-					testResultElement.innerHTML = "Testing....";
-					saveData = {
-						ip_mqtt       : ipMqttElement.value,
-						port_mqtt     : portMqttElement.value,
-						username_mqtt : usernameMqttElement.value,
-						password_mqtt : passwordMqttElement.value
-					};
-					//test broker settings
-					console.log(`testing ${JSON.stringify(saveData)}`);
-					HomeyAPI.api('POST', '/validate', saveData, function( err, result ) {
-							if( err ) {
-								testResultElement.innerHTML = 'error: '+err;
-								saveElement.disabled = true;
-								return HomeyAPI.alert(err, 'error')
-							};
-							testResultElement.innerHTML =  HomeyAPI.__("correctSettings"); //'success: the MQTT settings are correct, now save them!';
-							saveElement.disabled = false;
-							return HomeyAPI.alert(HomeyAPI.__("correctSettings"), 'info')
-					});
-				}
-
-				function save() {
-					testResultElement.innerHTML = " ";
-					saveData = {
-						ip_mqtt       : ipMqttElement.value,
-						port_mqtt     : portMqttElement.value,
-						username_mqtt : usernameMqttElement.value,
-						password_mqtt : passwordMqttElement.value
-					};
-					HomeyAPI.set('settings', saveData, function (error) {
-						if (error) {return HomeyAPI.alert(error, 'error')};
-						return HomeyAPI.alert(HomeyAPI.__("settingsSaved"), 'info')
-					});
-				}
-
-				function pw2pySave() {
-					saveData = {
-						ip_pw2py      : ipPw2pyElement.value,
-						port_pw2py    : portPw2pyElement.value,
-					}
-					HomeyAPI.set('settings_pw2py', saveData, function (error) {
-						if (error) {return HomeyAPI.alert(error, 'error')};
-						return HomeyAPI.alert(HomeyAPI.__("settingsSaved"), 'info')
-					});
-				}
-
-				function pw2pyConfig() {
-					var url = 'http://'+ipPw2pyElement.value+':'+portPw2pyElement.value+'/cfg-pw2py.html';
-					HomeyAPI.openURL( url );
-				}
-
-				function pw2pyControl() {
-					var url = 'http://'+ipPw2pyElement.value+':'+portPw2pyElement.value;
-					HomeyAPI.openURL( url );
-				}
-
-				function showLogs() {
-				 HomeyAPI.api('GET', 'getlogs/', function(err, result) {
-						if (!err) {
-							 document.getElementById('loglines').innerHTML = '';
-							 for (var i=(result.length - 1); i >= 0; i--) {
-									document.getElementById('loglines').innerHTML += result[i];
-									document.getElementById('loglines').innerHTML += "<br />";
-							 }
-						};
-				 });
-				}
-				function deleteLogs() {
-					 HomeyAPI.api('GET', 'deletelogs/', function(err, result) {
-						 if (err) {
-							 HomeyAPI.alert( err.message, 'error' ); // [, String icon], Function callback )
-						 } else { HomeyAPI.alert( 'Logs deleted!', 'info' ); }
-					 });
-				}
-
-        </script>
-    </body>
+				<!-- Logging panel -->
+				<div id="tab4" class="panel">
+					<div class="setting">
+						<label class="settings-item-description" data-i18n="settings.tab4.deleteLogs">Delete</label>
+						<button id="deleteButton" class="btn" onclick="deleteLogs()" data-i18n="settings.tab4.deleteLogs">Delete</button>
+						<div id="loglines" class="instructions"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
+

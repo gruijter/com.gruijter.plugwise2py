@@ -1,20 +1,20 @@
 /*
-Copyright 2016 - 2018, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2017 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
-This file is part of com.gruijter.plugwise2py.
+This file is part of com.gruijter.enelogic.
 
-com.gruijter.plugwise2py is free software: you can redistribute it and/or modify
+com.gruijter.enelogic is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-com.gruijter.plugwise2py is distributed in the hope that it will be useful,
+com.gruijter.enelogic is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>.
+along with com.gruijter.enelogic.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 'use strict';
@@ -29,10 +29,10 @@ class captureLogs {
 	// captures and reroutes Homey's this.log (stdout) and this.err (stderr)
 
 	constructor(logName, logLength) {
+		this.logArray = [];
 		this.logName = logName || 'log';
 		this.logLength = logLength || 50;
 		this.logFile = `/userdata/${this.logName}.json`;
-		this.logArray = [];
 		this.getLogs();
 		this.captureStdOut();
 		this.captureStdErr();
@@ -42,20 +42,19 @@ class captureLogs {
 	getLogs() {
 		fs.readFile(this.logFile, 'utf8', (err, data) => {
 			if (err) {
-				Homey.app.error('error reading logfile: ', err.message);
+				Homey.app.error('no logfile available');
 				return [];
 			}
 			try {
 				this.logArray = JSON.parse(data);
-				// console.log(this.logArray);
 			} catch (error) {
 				Homey.app.error('error parsing logfile: ', error.message);
 				return [];
 			}
-			// Homey.app.log('logs retrieved from module');
 			return this.logArray;
 		});
 	}
+
 	saveLogs() {
 		fs.writeFile(this.logFile, JSON.stringify(this.logArray), (err) => {
 			if (err) {
@@ -65,8 +64,8 @@ class captureLogs {
 			}
 		});
 	}
+
 	deleteLogs() {
-		// this.log('deleting logs from frontend');
 		this.logArray = [];
 		fs.unlink(this.logFile, (err) => {
 			if (err) {
@@ -81,7 +80,7 @@ class captureLogs {
 	captureStdOut() {
 		// Capture all writes to stdout (e.g. this.log)
 		this.captureStdout = new StdOutFixture({ stream: process.stdout });
-		Homey.app.log('capturing stdout');
+		// Homey.app.log('capturing stdout');
 		this.captureStdout.capture((string) => {
 			if (this.logArray.length >= this.logLength) {
 				this.logArray.shift();
@@ -91,10 +90,11 @@ class captureLogs {
 		});
 		// captureStdout.release();
 	}
+
 	captureStdErr() {
 		// Capture all writes to stderr (e.g. this.error)
 		this.captureStderr = new StdOutFixture({ stream: process.stderr });
-		Homey.app.log('capturing stderr');
+		// Homey.app.log('capturing stderr');
 		this.captureStderr.capture((string) => {
 			if (this.logArray.length >= this.logLength) {
 				this.logArray.shift();
@@ -104,9 +104,11 @@ class captureLogs {
 		});
 		// captureStderr.release();
 	}
+
 	releaseStdOut() {
 		this.captureStdout.release();
 	}
+
 	releaseStdErr() {
 		this.captureStderr.release();
 	}
