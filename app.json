@@ -10,7 +10,7 @@
 	"tags": {
 		"en": [ "plugwise", "energy monitoring" ],
 		"nl": [ "plugwise", "energie meten"  ]
-	},
+  },
   "version": "2.0.6",
   "compatibility": ">= 1.5",
 	"sdk": 2,
@@ -26,12 +26,15 @@
 				"username": "gruijter"
 			}
 		}
-	},
+  },
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
+  },
+  "homeyCommunityTopicId": 10635,
   "images": {
     "large": "./assets/images/large.jpg",
     "small": "./assets/images/small.jpg"
   },
-
   "category": ["energy","appliances", "tools"],
 
   "drivers": [
