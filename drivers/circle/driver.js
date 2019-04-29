@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /*
 Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
 
@@ -49,7 +50,7 @@ class Pw2pyDriver extends Homey.Driver {
 				this.initBusy = false;
 			})
 			.catch((error) => {
-				this.error(error);
+				this.error(error.message);
 				this.initBusy = false;
 			});
 	}
@@ -57,7 +58,7 @@ class Pw2pyDriver extends Homey.Driver {
 	connectHost() {
 		return new Promise((resolve, reject) => {
 			try {
-				if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) { return reject(Error('there are no settings')); }
+				if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) { return reject(Error('There are no app settings')); }
 				if (this.mqttClient !== undefined) {
 					this.log('ending previous mqtt client session');
 					this.mqttClient.end();

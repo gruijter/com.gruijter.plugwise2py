@@ -1,5 +1,6 @@
 Version changelog
 
+v2.0.7  2019.04.29 Fixed app settings page.
 v2.0.6  2019.03.15 Settings page optimized for Homey V2.
 v2.0.5	2018.09.04 MQTT update v2.18.8. Memory usage reduction.
 v2.0.4	2018.04.07 MQTT update v2.17.0. Log module added. Stability improvements.

@@ -76,7 +76,7 @@ function test() {
 	});
 }
 
-function save() {
+function savePw2py() {
 	saveData = {
 		ip_pw2py: $('#ip_pw2py').val(),
 		port_pw2py: $('#port_pw2py').val(),
@@ -89,7 +89,7 @@ function save() {
 	});
 }
 
-function savePw2py() {
+function saveMqtt() {
 	saveData = {
 		ip_mqtt: $('#ip_mqtt').val(),
 		port_mqtt: $('#port_mqtt').val(),
