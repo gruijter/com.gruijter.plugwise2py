@@ -1,5 +1,6 @@
 Version changelog
 
+v3.0.0  2020.04.03 MQTT upgrade v3.0.0. Added MQTT TLS support. Added Plugwise2Py server issue detection.
 v2.0.8  2019.05.05 Increase meter accuracy to 4 digits.
 v2.0.7  2019.04.29 Fixed app settings page.
 v2.0.6  2019.03.15 Settings page optimized for Homey V2.

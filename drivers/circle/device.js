@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2020, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -28,6 +28,8 @@ class Circle extends Homey.Device {
 		this.log(`device init ${this.getClass()} ${this.getData().id} ${this.getName()}`);
 		clearInterval(this.intervalIdDevicePoll);	// if polling, stop polling
 		this.driver = this.getDriver();
+		this.setAvailable();
+		this.lastUpdate = Date.now();
 		// register capability listener
 		this.registerCapabilityListener('onoff', (value) => {
 			// this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
@@ -35,6 +37,7 @@ class Circle extends Homey.Device {
 			return Promise.resolve(true);
 		});
 		// start polling mqtt server for circle data and update the state
+		const pollingInterval = 1000 * this.getSetting('pollingInterval');
 		this.intervalIdDevicePoll = setInterval(() => {
 			try {
 				if (Object.prototype.hasOwnProperty.call(this.driver, 'mqttClient')) {
@@ -43,9 +46,13 @@ class Circle extends Homey.Device {
 						return;
 					}
 					this.driver.checkCircleState(this.getData().id);
+					if ((Date.now() - this.lastUpdate) > 3 * pollingInterval) {
+						this.setUnavailable('PlugWise2Py not connected')
+							.catch(this.error);
+					}
 				}
 			} catch (error) { this.log('intervalIdDevicePoll error', error); }
-		}, 1000 * this.getSetting('pollingInterval'));
+		}, pollingInterval);
 	}
 
 	// this method is called when the Device is added
@@ -80,6 +87,8 @@ class Circle extends Homey.Device {
 	}
 
 	updateCircleState(circleState) {
+		this.lastUpdate = Date.now();
+
 		if (this.getCapabilityValue('onoff') !== (circleState.switch === 'on')) {
 			this.setCapabilityValue('onoff', circleState.switch === 'on')
 				.catch(this.error);
@@ -141,7 +150,7 @@ circleState: {
 	lastseen: e.g. 1475524537  // timestamp when circle was last seen by circle+ or by pw2py?
 	monitor: true or false // Autonomous messages are published when monitoring && savelog = true
 	savelog: true or false // Autonomous messages are published when monitoring && savelog = true
-	interval: e.g. 60  // circle buffer power measure integration interval in minutes?
+	interval: e.g. 60  // circle power measure integration interval in minutes?
 	readonly: true or false
 	schedule: 'on' or 'off'
 	schedname: e.g. 'sched. 1' // name of schedule to use
@@ -162,6 +171,6 @@ circleEnergy: {
 	power: e.g. 185.6051 // dunno what this is... 8s power measure maybe?
 	energy: e.g. 6.1868  // energy (wH) over last interval?
 	cum_energy: e.g. 521930.4033  // energy (wH) since start of reading by pw2py?
-	interval: e.g. 60  // circle buffer power measure integration interval in minutes?
+	interval: e.g. 60  // circle power measure integration interval in minutes?
 }
 */

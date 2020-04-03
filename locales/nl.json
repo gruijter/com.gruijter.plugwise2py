@@ -14,6 +14,7 @@
 			"title": "Instellingen",
 			"ip_mqtt": "MQTT IP adres",
 			"port_mqtt": "MQTT Poort",
+			"tls_mqtt": "Gebruik TLS",
 			"username_mqtt": "MQTT Gebruikersnaam",
 			"password_mqtt": "MQTT Wachtwoord",
 			"test": "Test instellingen",

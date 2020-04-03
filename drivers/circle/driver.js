@@ -1,6 +1,5 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /*
-Copyright 2016 - 2019, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2020, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -63,12 +62,14 @@ class Pw2pyDriver extends Homey.Driver {
 					this.log('ending previous mqtt client session');
 					this.mqttClient.end();
 				}
-				const host = `mqtt://${this.mqttSettings.ip_mqtt}:${this.mqttSettings.port_mqtt}`;
+				const protocol = this.mqttSettings.tls_mqtt ? 'mqtts' : 'mqtt';
+				const host = `${protocol}://${this.mqttSettings.ip_mqtt}:${this.mqttSettings.port_mqtt}`;
 				const options =	{
-					port: this.mqttSettings.port_mqtt,
 					clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
 					username: this.mqttSettings.username_mqtt,
 					password: this.mqttSettings.password_mqtt,
+					// protocolId: 'MQTT',
+					rejectUnauthorized: false,
 					keepalive: 60,
 					reconnectPeriod: 10000,
 					clean: true,
@@ -231,16 +232,20 @@ class Pw2pyDriver extends Homey.Driver {
 	validateSettings(settings) {
 		return new Promise((resolve, reject) => {
 			try {
-				const testHost = `mqtt://${settings.ip_mqtt}:${settings.port_mqtt}`;
-				const testOptions =	{
-					port: settings.port_mqtt,
+				const protocol = settings.tls_mqtt ? 'mqtts' : 'mqtt';
+				const host = `${protocol}://${settings.ip_mqtt}:${settings.port_mqtt}`;
+				const options =	{
 					clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
 					username: settings.username_mqtt,
 					password: settings.password_mqtt,
-					// connectTimeout: 20 * 1000,
-					// keepalive: 0,
+					// protocolId: 'MQTT',
+					rejectUnauthorized: false,
+					// keepalive: 60,
+					// reconnectPeriod: 10000,
+					// clean: true,
+					// queueQoSZero: false,
 				};
-				const testClient = mqtt.connect(testHost, testOptions);
+				const testClient = mqtt.connect(host, options);
 				testClient
 					.on('connect', () => {
 						this.log(`client is connected? : ${testClient.connected}`);
@@ -270,6 +275,7 @@ class Pw2pyDriver extends Homey.Driver {
 					});
 				return setTimeout(() => {
 					reject(Error('Timeout'));
+					testClient.end();
 				}, 10000);
 			} catch (error) {
 				this.error('error while validating settings: ', error);

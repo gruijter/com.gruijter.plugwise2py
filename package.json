@@ -1,0 +1,25 @@
+{
+  "name": "com.gruijter.plugwise2py",
+  "version": "1.0.0",
+  "description": "Homey app to connect plugwise circles via [Plugwise-2-py]. This tool, developed\r by [Seven Watt], can be used as an alternative for Plugwise Source. It runs on\r all devices that support python, such as your NAS or a raspberry pi.",
+  "main": "api.js",
+  "dependencies": {
+    "fixture-stdout": "^0.2.1",
+    "mqtt": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gruijter/com.gruijter.plugwise2py.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
+  },
+  "homepage": "https://github.com/gruijter/com.gruijter.plugwise2py#readme"
+}

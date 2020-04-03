@@ -11,8 +11,8 @@
 		"en": [ "plugwise", "energy monitoring" ],
 		"nl": [ "plugwise", "energie meten"  ]
 	},
-	"version": "2.0.8",
-	"compatibility": ">= 1.5",
+	"version": "3.0.0",
+	"compatibility": ">= 2.0",
 	"sdk": 2,
 	"author": {
 		"name": "Robin de Gruijter",

@@ -49,6 +49,7 @@ function getSettings() {
 		if (!err && storedData) {
 			$('#ip_mqtt').val(storedData.ip_mqtt);
 			$('#port_mqtt').val(storedData.port_mqtt);
+			$('#tls_mqtt').prop('checked', storedData.tls_mqtt);
 			$('#username_mqtt').val(storedData.username_mqtt);
 			$('#password_mqtt').val(storedData.password_mqtt);
 		}
@@ -65,6 +66,7 @@ function test() {
 	saveData = {
 		ip_mqtt: $('#ip_mqtt').val(),
 		port_mqtt: $('#port_mqtt').val(),
+		tls_mqtt: $('#tls_mqtt').prop('checked'),
 		username_mqtt: $('#username_mqtt').val(),
 		password_mqtt: $('#password_mqtt').val(),
 	};
@@ -93,6 +95,7 @@ function saveMqtt() {
 	saveData = {
 		ip_mqtt: $('#ip_mqtt').val(),
 		port_mqtt: $('#port_mqtt').val(),
+		tls_mqtt: $('#tls_mqtt').prop('checked'),
 		username_mqtt: $('#username_mqtt').val(),
 		password_mqtt: $('#password_mqtt').val(),
 	};

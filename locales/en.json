@@ -14,6 +14,7 @@
 			"title": "Settings",
 			"ip_mqtt": "MQTT IP address",
 			"port_mqtt": "MQTT Port",
+			"tls_mqtt": "Use TLS",
 			"username_mqtt": "MQTT Username",
 			"password_mqtt": "MQTT Password",
 			"test": "Test settings",
