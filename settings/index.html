@@ -95,8 +95,18 @@
 				<!-- Logging panel -->
 				<div id="tab4" class="panel">
 					<div class="setting">
-						<label class="settings-item-description" data-i18n="settings.tab4.deleteLogs">Delete</label>
-						<button id="deleteButton" class="btn" onclick="deleteLogs()" data-i18n="settings.tab4.deleteLogs">Delete</button>
+						<button id="deleteButton" class="btn" onclick="deleteLogs()" data-i18n="settings.tab4.deletelogs">Delete</button>
+						<br>
+						<label class="form-switch">
+							log
+							<input type="checkbox" name="logs" id="show_logs" onchange="updateLogs()" checked/>
+							<i></i>
+						</label>
+						<label class="form-switch">
+							error
+							<input type="checkbox" name="errors" id="show_errors" onchange="updateLogs()" checked/>
+							<i></i>
+						</label>
 						<div id="loglines" class="instructions"></div>
 					</div>
 				</div>

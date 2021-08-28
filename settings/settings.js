@@ -7,12 +7,28 @@ function displayLogs(lines) {
 
 function updateLogs() {
 	try {
+		displayLogs('');
+		const showLogs = $('#show_logs').prop('checked');
+		const showErrors = $('#show_errors').prop('checked');
 		Homey.api('GET', 'getlogs/', null, (err, result) => {
 			if (!err) {
 				let lines = '';
-				for (let i = (result.length - 1); i >= 0; i -= 1) {
-					lines += `${result[i]}<br />`;
-				}
+				result
+					.reverse()
+					.forEach((line) => {
+						if (!showLogs) {
+							if (line.includes('[log]')) return;
+						}
+						if (!showErrors) {
+							if (line.includes('[err]')) return;
+						}
+						const logLine = line
+							.replace(' [ManagerDrivers]', '')
+							.replace(' [circle]', '');
+							// .replace(/\[Device:(.*?)\]/, '[dev]')
+							// .replace(/\[Driver:(.*?)\]/, '[$1]');
+						lines += `${logLine}<br />`;
+					});
 				displayLogs(lines);
 			} else {
 				displayLogs(err);
