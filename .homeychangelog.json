@@ -4,5 +4,8 @@
   },
   "3.1.0": {
     "en": "MQTT upgrade v4.2.8. Improved logs. Added brandcolor."
+  },
+  "4.0.0": {
+    "en": "Rewrite to SDK3. MQTT upgrade v4.3.7"
   }
 }

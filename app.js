@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2021, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2023, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -21,14 +21,14 @@ along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>
 
 // const util = require('util');
 const Homey = require('homey');
-const Logger = require('./captureLogs.js');
+const Logger = require('./captureLogs');
 
 // -----------------------app settings page backend-----------------------------
 class settingsBackend extends Homey.App {
 
 	onInit() {
 		this.log('plugwise2py app is running!');
-		if (!this.logger) this.logger = new Logger({ homey: this, length: 200 });
+		if (!this.logger) this.logger = new Logger({ name: 'log', length: 200, homey: this.homey });
 
 		process.on('unhandledRejection', (error) => {
 			this.error('unhandledRejection! ', error);
@@ -36,7 +36,7 @@ class settingsBackend extends Homey.App {
 		process.on('uncaughtException', (error) => {
 			this.error('uncaughtException! ', error);
 		});
-		Homey
+		this.homey
 			.on('unload', () => {
 				this.log('app unload called');
 				// save logs to persistant storage
@@ -47,20 +47,11 @@ class settingsBackend extends Homey.App {
 			})
 			.on('memwarn', () => {
 				this.log('memwarn!');
-				// pause polling for a minutes and reset connection
-				// const driver = Homey.ManagerDrivers.getDriver('circle');
-				// if (driver.mqttClient !== undefined) {
-				// 	this.log('ending previous mqtt client session');
-				// 	driver.mqttClient.end();
-				// }
-				// setTimeout(() => {
-				// 	driver.onInit();
-				// }, 60000);
 			});
 		// do garbage collection every 10 minutes
-		this.intervalIdGc = setInterval(() => {
-			global.gc();
-		}, 1000 * 60 * 10);
+		// this.intervalIdGc = setInterval(() => {
+		// 	global.gc();
+		// }, 1000 * 60 * 10);
 	}
 
 	//  stuff for frontend API
@@ -72,15 +63,8 @@ class settingsBackend extends Homey.App {
 		return this.logger.logArray;
 	}
 
-	// check the settings for frontend via api
-	validateSettings(settings) {
-		return new Promise((resolve, reject) => {
-			this.log(settings);
-			Homey.ManagerDrivers.getDriver('circle').validateSettings(settings)
-				.then((result) => {	resolve(result);	})
-				.catch((error) => {	reject(error);	});
-		});
-	}
+	// check the MQTT settings from frontend
+	// validateSettings(query) > was moved to driver
 
 }
 

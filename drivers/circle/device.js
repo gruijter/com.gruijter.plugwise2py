@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2021, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2023, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -19,40 +19,70 @@ along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>
 
 'use strict';
 
-const Homey = require('homey');
+const { Device } = require('homey');
+const util = require('util');
 
-class Circle extends Homey.Device {
+const setTimeoutPromise = util.promisify(setTimeout);
+
+class Circle extends Device {
 
 	// this method is called when the Device is inited
-	onInit() {
+	async onInit() {
 		this.log(`device init ${this.getClass()} ${this.getData().id} ${this.getName()}`);
-		clearInterval(this.intervalIdDevicePoll);	// if polling, stop polling
-		this.driver = this.getDriver();
+		this.restarting = false;
 		this.setAvailable();
 		this.lastUpdate = Date.now();
-		// register capability listener
-		this.registerCapabilityListener('onoff', (value) => {
-			// this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
-			this.driver.switchCircleOnoff(this.getData().id, value);
-			return Promise.resolve(true);
-		});
+		if (!this.allListeners) await this.registerListeners();
 		// start polling mqtt server for circle data and update the state
-		const pollingInterval = 1000 * this.getSetting('pollingInterval');
-		this.intervalIdDevicePoll = setInterval(() => {
+		this.startPolling(this.getSetting('pollingInterval'));
+	}
+
+	async registerListeners() {
+		try {
+			this.log('registering listeners');
+			if (!this.allListeners) this.allListeners = {};
+			// register capability listener
+			this.registerCapabilityListener('onoff', (value) => {
+				// this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
+				this.driver.switchCircleOnoff(this.getData().id, value);
+			});
+		} catch (error) {
+			this.error(error);
+		}
+	}
+
+	startPolling(int) {
+		const interval = int || 20;
+		this.log(`Start polling ${this.getName()} @ ${interval} seconds interval`);
+		this.stopPolling();
+		this.intervalIdDevicePoll = this.homey.setInterval(async () => {
 			try {
-				if (Object.prototype.hasOwnProperty.call(this.driver, 'mqttClient')) {
-					if (!this.driver.mqttClient.connected) {
-						this.setUnavailable('No MQTT broker connection').catch(this.error);
-						return;
-					}
-					this.driver.checkCircleState(this.getData().id);
-					if ((Date.now() - this.lastUpdate) > 3 * pollingInterval) {
-						this.setUnavailable('PlugWise2Py not connected')
-							.catch(this.error);
-					}
+				if (!this.driver.mqttClient || !this.driver.mqttClient.connected) {
+					this.setUnavailable('No MQTT broker connection').catch(this.error);
+					return;
 				}
-			} catch (error) { this.log('intervalIdDevicePoll error', error); }
-		}, pollingInterval);
+				this.driver.checkCircleState(this.getData().id);
+				if ((Date.now() - this.lastUpdate) > 3 * 1000 * interval) this.setUnavailable('PlugWise2Py not connected').catch(this.error);
+			} catch (error) {
+				this.error(error);
+				// this.restartDevice();
+			}
+		}, 1000 * interval);
+	}
+
+	stopPolling() {
+		this.homey.clearInterval(this.intervalIdDevicePoll);
+	}
+
+	restartDevice(delay) {
+		// this.destroyListeners();
+		if (this.restarting) return;
+		this.restarting = true;
+		this.stopPolling();
+		const dly = delay || 1000 * 5;
+		this.log(`Device will restart in ${dly / 1000} seconds`);
+		// this.setUnavailable('Device is restarting');
+		setTimeoutPromise(dly).then(() => this.onInit());
 	}
 
 	// this method is called when the Device is added
@@ -62,52 +92,35 @@ class Circle extends Homey.Device {
 
 	// this method is called when the Device is deleted
 	onDeleted() {
-		this.log(`device deleted: ${this.getData().id} ${this.getName()}`);
-		clearInterval(this.intervalIdDevicePoll);
+		this.log(`circle deleted: ${this.getData().id} ${this.getName()}`);
+		this.stopPolling();
 	}
 
-	// this method is called when the user has changed the device's settings in Homey.
-	onSettings(newSettingsObj, oldSettingsObj, changedKeysArr, callback) {
-		// first stop polling the device, then start init after short delay
-		clearInterval(this.intervalIdDevicePoll);
-		this.log('circle device settings changed');
-		this.setAvailable()
-			.catch(this.error);
-		setTimeout(() => {
-			this.onInit();
-		}, 10000);
-		callback(null, true);
+	async onSettings({ newSettings }) { // oldSettings, changedKeys
+		this.log(`${this.getName()} settings were changed`, newSettings);
+		this.restartDevice();
 	}
 
-	updateCircleEnergy(circleEnergy) {
+	async updateCircleEnergy(circleEnergy) {
 		if (this.getCapabilityValue('meter_power') !== Math.abs(circleEnergy.cum_energy / 1000)) {
-			this.setCapabilityValue('meter_power', Math.abs(circleEnergy.cum_energy / 1000))
-				.catch(this.error);
+			this.setCapabilityValue('meter_power', Math.abs(circleEnergy.cum_energy / 1000)).catch(this.error);
 		}
 	}
 
-	updateCircleState(circleState) {
+	async updateCircleState(circleState) {
 		this.lastUpdate = Date.now();
 
 		if (this.getCapabilityValue('onoff') !== (circleState.switch === 'on')) {
-			this.setCapabilityValue('onoff', circleState.switch === 'on')
-				.catch(this.error);
+			this.setCapabilityValue('onoff', circleState.switch === 'on').catch(this.error);
 		}
 		if (this.getCapabilityValue('measure_power') !== Math.round(circleState.power8s * 10) / 10) {
-			this.setCapabilityValue('measure_power', Math.round(circleState.power8s * 10) / 10)
-				.catch(this.error);
+			this.setCapabilityValue('measure_power', Math.round(circleState.power8s * 10) / 10).catch(this.error);
 		}
 
 		// report available or unavailable
 		if (this.getAvailable()) {
-			if (circleState.online === false) {
-				this.setUnavailable('Device not online')
-					.catch(this.error);
-			}
-		} else if (circleState.online === true) {
-			this.setAvailable()
-				.catch(this.error);
-		}
+			if (circleState.online === false) this.setUnavailable('Device not online').catch(this.error);
+		} else if (circleState.online === true) this.setAvailable().catch(this.error);
 
 		// update the info presented in the device settings
 		const settings = this.getSettings();
@@ -130,8 +143,7 @@ class Circle extends Homey.Device {
 		Object.keys(settings).forEach((key) => {
 			if ((settings[key] !== newSettings[key]) && newSettings[key] !== undefined) {
 				// this.log(`device information has changed. ${key}: ${newSettings[key]}`);
-				this.setSettings({ [key]: newSettings[key] })
-					.catch(this.error);
+				this.setSettings({ [key]: newSettings[key] }).catch(this.error);
 			}
 		});
 	}

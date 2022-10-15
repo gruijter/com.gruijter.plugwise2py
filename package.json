@@ -1,13 +1,12 @@
 {
   "name": "com.gruijter.plugwise2py",
-  "version": "1.1.0",
+  "version": "4.0.0",
   "description": "Energy management for plugwise circles via [Plugwise-2-py].",
   "main": "api.js",
   "dependencies": {
     "fixture-stdout": "^0.2.1",
-    "mqtt": "^4.2.8"
+    "mqtt": "^4.3.7"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +16,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
   },

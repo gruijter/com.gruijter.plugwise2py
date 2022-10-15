@@ -12,9 +12,9 @@
 		"nl": [ "plugwise", "energie meten"  ]
 	},
 	"brandColor": "#063970",
-	"version": "3.1.0",
-	"compatibility": ">= 2.0",
-	"sdk": 2,
+	"version": "4.0.0",
+	"compatibility": ">= 6.0",
+	"sdk": 3,
 	"author": {
 		"name": "Robin de Gruijter",
 		"email": "gruijter@hotmail.com"
@@ -129,8 +129,8 @@
 				{
 					"type": "group",
 					"label": {
-					"en": "pw2py Circle settings",
-					"nl": "pw2py Circle instellingen"
+					"en": "Circle info",
+					"nl": "Circle info"
 					},
 					"children": [
 						{
@@ -141,16 +141,6 @@
 							"nl": "mac"
 							},
 							"value": "A1B2C3D4"
-						},
-						{
-							"id": "pollingInterval",
-							"type": "number",
-							"label": {
-							"en": "polling interval (s)",
-							"nl": "polling interval (s)"
-							},
-							"attr": { "min": 10 },
-							"value": 20
 						},
 						{
 							"id": "type",
@@ -225,8 +215,41 @@
 							"value": "off"
 						}
 					]
+				},
+				{
+					"type": "group",
+					"label": {
+					"en": "pw2py Circle settings",
+					"nl": "pw2py Circle instellingen"
+					},
+					"children": [
+						{
+							"id": "pollingInterval",
+							"type": "number",
+							"label": {
+							"en": "polling interval (s)",
+							"nl": "polling interval (s)"
+							},
+							"attr": { "min": 10 },
+							"value": 20
+						}
+					]
 				}
 			]
 		}
-	]
+	],
+	"api": {
+		"getLogs": {
+		  "method": "get",
+		  "path": "/getlogs"
+		},
+		"deleteLogs": {
+		  "method": "get",
+		  "path": "/deletelogs"
+		},
+		"validateSettings": {
+		  "method": "post",
+		  "path": "/validate"
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2016 - 2021, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2023, Robin de Gruijter (gruijter@hotmail.com)
 
 This file is part of com.gruijter.plugwise2py.
 
@@ -19,117 +19,117 @@ along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>
 
 'use strict';
 
-const Homey = require('homey');
+const { Driver } = require('homey');
 const mqtt = require('mqtt');
-// const util = require('util');
+const util = require('util');
+
+const setTimeoutPromise = util.promisify(setTimeout);
 
 // this driver handles the mqtt broker communication and keeps a list of all
 // circles and states (including non-paired)
-class Pw2pyDriver extends Homey.Driver {
+class Pw2pyDriver extends Driver {
 
-	onInit() {
-		if (this.initBusy) {
-			this.log('Pw2pyDriver onInit already busy');
-			return;
+	async onInit() {
+		try {
+			this.log('Pw2pyDriver onInit');
+			// init some variables
+			this.allCirclesState = {};		// latest state of all pw2py devices
+			this.allCirclesEnergy = {};		// latest energy state of all pw2py devices
+			this.mqttSettings = this.homey.settings.get('settings');
+			this.homey.app.validateSettings = this.validateSettings; // validate mqtt settings from frontend
+			// init listeners
+			if (!this.allListeners) await this.registerListeners();
+			// connect to mqtt host
+			await this.connectHost();
+		} catch (error) {
+			this.error(error.message);
+			await setTimeoutPromise(60 * 1000);
+			this.onInit();
 		}
-		this.log('Pw2pyDriver onInit');
-		// init some variables
-		this.initBusy = true;
-		this.allCirclesState = {};		// latest state of all pw2py devices
-		this.allCirclesEnergy = {};		// latest energy state of all pw2py devices
-		this.mqttSettings = Homey.ManagerSettings.get('settings');
-		Homey.ManagerSettings.on('set', (changedKey) => {	// Fired when an app setting has changed
-			if (changedKey === 'settings') {		// save button is pressed, reconnect must be initiated
-				this.log(changedKey);
-				this.onInit();
-			}
-		});
-		this.connectHost()	// connect to mqtt host
-			.then(() => {
-				this.initBusy = false;
-			})
-			.catch((error) => {
-				this.error(error.message);
-				this.initBusy = false;
-			});
 	}
 
-	connectHost() {
-		return new Promise((resolve, reject) => {
-			try {
-				if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) { return reject(Error('There are no app settings')); }
-				if (this.mqttClient !== undefined) {
-					this.log('ending previous mqtt client session');
-					this.mqttClient.end();
+	async registerListeners() {
+		try {
+			this.log('registering listeners');
+			if (!this.allListeners) this.allListeners = {};
+			this.homey.settings.on('set', (changedKey) => {	// Fired when an app setting has changed
+				if (changedKey === 'settings') {		// save button is pressed, reconnect must be initiated
+					this.log(changedKey);
+					this.mqttSettings = this.homey.settings.get('settings');
+					this.onInit();
 				}
-				const protocol = this.mqttSettings.tls_mqtt ? 'mqtts' : 'mqtt';
-				const host = `${protocol}://${this.mqttSettings.ip_mqtt}:${this.mqttSettings.port_mqtt}`;
-				const options =	{
-					clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
-					username: this.mqttSettings.username_mqtt,
-					password: this.mqttSettings.password_mqtt,
-					// protocolId: 'MQTT',
-					rejectUnauthorized: false,
-					keepalive: 60,
-					reconnectPeriod: 10000,
-					clean: true,
-					queueQoSZero: false,
-				};
-				this.mqttClient = mqtt.connect(host, options);
-				this.mqttClient
-					.on('error', (error) => { this.error(error); })
-					.on('offline', () => { this.log('mqtt broker is offline'); })
-					.on('reconnect', () => { this.log('client is trying to reconnect'); })
-					.on('close', () => { this.log('client closed (disconnected)');	})
-					.on('end', () => { this.log('client ended');	})
-					.on('connect', (connack) => {
-						this.log(`mqtt connection ok: ${JSON.stringify(connack)}`);
-						// this.log('subscribing to plugwise2py/state/circle/# and plugwise2py/state/energy/#');
-						this.mqttClient.subscribe(
-							['plugwise2py/state/circle/#', 'plugwise2py/state/energy/#'],
-							{},
-							(err, granted) => {
-								if (err) this.error(`mqtt subscription error: ${err}`);
-								else this.log(`mqtt subscription ok: ${JSON.stringify(granted)}`);
-							},
-						);
-					})
-					.on('message', (topic, message) => {		// handle incoming messages
-						// this.log(`message received from topic: ${topic}`);
-						if (message.length > 0) {	// won't crash but question is why empty?
-							let circleState;
-							let circleEnergy;
-							switch (topic.substr(0, 25)) {
-								case 'plugwise2py/state/circle/':
-									circleState = this.tryParseJSON(message.toString());
-									this.handleNewCircleState(circleState);
-									break;
-								case 'plugwise2py/state/energy/':
-									circleEnergy = this.tryParseJSON(message.toString());
-									this.handleNewEnergyState(circleEnergy);
-									break;
-								default:
-									break;
-							}
-						}
-					});
-				return resolve(true);
-			} catch (error) {
-				this.error('error during connectHost');
-				return reject(error);
-			}
-		});
+			});
+			return Promise.resolve(this.listeners);
+		} catch (error) {
+			return Promise.reject(error);
+		}
 	}
 
-	onPairListDevices(data, callback) {
-		this.log('listing of devices started');
-		this.makeDeviceList(this.allCirclesState)
-			.then((deviceList) => {
-				callback(null, deviceList);
+	async connectHost() {
+		this.mqttSettings = this.homey.settings.get('settings');
+		if ((this.mqttSettings === null) || (this.mqttSettings === undefined)) {
+			throw Error('There are no app settings');
+		}
+		if (this.mqttClient !== undefined) {
+			this.log('ending previous mqtt client session');
+			this.mqttClient.end();
+		}
+		const protocol = this.mqttSettings.tls_mqtt ? 'mqtts' : 'mqtt';
+		const host = `${protocol}://${this.mqttSettings.ip_mqtt}:${this.mqttSettings.port_mqtt}`;
+		const options =	{
+			clientId: `Homey_${Math.random().toString(16).substring(2, 8)}`,
+			username: this.mqttSettings.username_mqtt,
+			password: this.mqttSettings.password_mqtt,
+			// protocolId: 'MQTT',
+			rejectUnauthorized: false,
+			keepalive: 60,
+			reconnectPeriod: 10000,
+			clean: true,
+			queueQoSZero: false,
+		};
+		this.mqttClient = mqtt.connect(host, options);
+		this.mqttClient
+			.on('error', (error) => { this.error(error); })
+			.on('offline', () => { this.log('mqtt broker is offline'); })
+			.on('reconnect', () => { this.log('client is trying to reconnect'); })
+			.on('close', () => { this.log('client closed (disconnected)');	})
+			.on('end', () => { this.log('client ended');	})
+			.on('connect', (connack) => {
+				this.log(`mqtt connection ok: ${JSON.stringify(connack)}`);
+				// this.log('subscribing to plugwise2py/state/circle/# and plugwise2py/state/energy/#');
+				this.mqttClient.subscribe(
+					['plugwise2py/state/circle/#', 'plugwise2py/state/energy/#'],
+					{},
+					(err, granted) => {
+						if (err) this.error(`mqtt subscription error: ${err}`);
+						else this.log(`mqtt subscription ok: ${JSON.stringify(granted)}`);
+					},
+				);
 			})
-			.catch((error) => {
-				callback(error);
+			.on('message', (topic, message) => {		// handle incoming messages
+				// this.log(`message received from topic: ${topic}`);
+				if (message.length > 0) {	// won't crash but question is why empty?
+					let circleState;
+					let circleEnergy;
+					switch (topic.substring(0, 25)) {
+						case 'plugwise2py/state/circle/':
+							circleState = this.tryParseJSON(message.toString());
+							this.handleNewCircleState(circleState);
+							break;
+						case 'plugwise2py/state/energy/':
+							circleEnergy = this.tryParseJSON(message.toString());
+							this.handleNewEnergyState(circleEnergy);
+							break;
+						default:
+							break;
+					}
+				}
 			});
+	}
+
+	async onPairListDevices() {
+		this.log('listing of devices started');
+		return this.makeDeviceList(this.allCirclesState);
 	}
 
 	checkCircleState(circleId) {
@@ -167,25 +167,30 @@ class Pw2pyDriver extends Homey.Driver {
 		);
 	}
 
-	handleNewCircleState(circleState) {
-		this.allCirclesState[circleState.mac] = circleState;	// update allCirclesState
+	tryGetDevice(id) {
 		try {
-			const device = this.getDevice({ id: circleState.mac });
-			if (device instanceof Homey.Device) {
-				device.updateCircleState(circleState);
-			}
+			const device = this.getDevice({ id });
+			return device;
+		} catch (error) {
+			return null; // this is not a paired circle
+		}
+	}
+
+	async handleNewCircleState(circleState) {
+		try {
+			this.allCirclesState[circleState.mac] = circleState;	// update allCirclesState
+			const device = this.tryGetDevice(circleState.mac);
+			if (device && typeof device.updateCircleState === 'function') await device.updateCircleState(circleState);
 		} catch (error) {
 			this.error(error);
 		}
 	}
 
-	handleNewEnergyState(circleEnergy) {
+	async handleNewEnergyState(circleEnergy) {
 		this.allCirclesEnergy[circleEnergy.mac] = circleEnergy;	// update allCirclesState
 		try {
-			const device = this.getDevice({ id: circleEnergy.mac });
-			if (device instanceof Homey.Device) {
-				device.updateCircleEnergy(circleEnergy);
-			}
+			const device = this.tryGetDevice(circleEnergy.mac);
+			if (device && typeof device.updateCircleEnergy === 'function') await device.updateCircleEnergy(circleEnergy);
 		} catch (error) {
 			this.error(error);
 		}
@@ -193,26 +198,19 @@ class Pw2pyDriver extends Homey.Driver {
 
 	// make pairing list of all circels posted by pw2py
 	makeDeviceList(circles) {
-		return new Promise((resolve, reject) => {
-			try {
-				this.log('entered makeDeviceList');
-				this.log(circles);
-				const deviceList = [];	// make an empty list
-				Object.keys(circles).forEach((circle) => {
-					const tmpDevice = {
-						name: circles[circle].name,
-						data: { id: circles[circle].mac	},
-						settings: { name: circles[circle].name },	// pw2py name of device
-						capabilities: ['onoff', 'measure_power', 'meter_power'],
-					};
-					deviceList.push(tmpDevice);
-				});
-				return resolve(deviceList);
-			} catch (error) {
-				this.log('error while making deviceList', error);
-				return reject(error);
-			}
+		this.log('entered makeDeviceList');
+		this.log(circles);
+		const deviceList = [];	// make an empty list
+		Object.keys(circles).forEach((circle) => {
+			const tmpDevice = {
+				name: circles[circle].name,
+				data: { id: circles[circle].mac	},
+				settings: { name: circles[circle].name },	// pw2py name of device
+				capabilities: ['onoff', 'measure_power', 'meter_power'],
+			};
+			deviceList.push(tmpDevice);
 		});
+		return deviceList;
 	}
 
 	// function to prevent 'Unexpected token' errors
@@ -229,13 +227,14 @@ class Pw2pyDriver extends Homey.Driver {
 		return false;
 	}
 
+	// validate mqtt settings from frontend
 	validateSettings(settings) {
 		return new Promise((resolve, reject) => {
 			try {
 				const protocol = settings.tls_mqtt ? 'mqtts' : 'mqtt';
 				const host = `${protocol}://${settings.ip_mqtt}:${settings.port_mqtt}`;
 				const options =	{
-					clientId: `Homey_${Math.random().toString(16).substr(2, 8)}`,
+					clientId: `Homey_${Math.random().toString(16).substring(2, 8)}`,
 					username: settings.username_mqtt,
 					password: settings.password_mqtt,
 					// protocolId: 'MQTT',
@@ -251,12 +250,12 @@ class Pw2pyDriver extends Homey.Driver {
 						this.log(`client is connected? : ${testClient.connected}`);
 						testClient.end();
 						// client is connected, settings are correct!
-						return resolve(true);
+						resolve(true);
 					})
 					.on('offline', () => {
 						this.log('broker offline');
 						testClient.end();
-						return reject(Error('incorrect ip address or port?'));
+						reject(Error('incorrect ip address or port?'));
 					})
 					// when offline the MQTT module will automatically try to reconnect
 					// .on('reconnect', () => {
@@ -271,15 +270,15 @@ class Pw2pyDriver extends Homey.Driver {
 						this.log('connection with broker not successful');
 						testClient.end();
 						// send result back to settings html
-						return reject(error);
+						reject(error);
 					});
-				return setTimeout(() => {
-					reject(Error('Timeout'));
+				setTimeout(() => {
 					testClient.end();
+					reject(Error('Timeout'));
 				}, 10000);
 			} catch (error) {
 				this.error('error while validating settings: ', error);
-				return reject(error);
+				reject(error);
 			}
 		});
 	}

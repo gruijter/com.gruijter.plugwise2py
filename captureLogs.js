@@ -1,20 +1,20 @@
 /*
-Copyright 2017 - 2021, Robin de Gruijter (gruijter@hotmail.com)
+Copyright 2016 - 2023, Robin de Gruijter (gruijter@hotmail.com)
 
-This file is part of com.gruijter.enelogic.
+This file is part of com.gruijter.plugwise2py.
 
-com.gruijter.enelogic is free software: you can redistribute it and/or modify
+com.gruijter.plugwise2py is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-com.gruijter.enelogic is distributed in the hope that it will be useful,
+com.gruijter.plugwise2py is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with com.gruijter.enelogic.  If not, see <http://www.gnu.org/licenses/>.
+along with com.gruijter.plugwise2py.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 'use strict';
@@ -32,35 +32,32 @@ class captureLogs {
 		this.logLength = opts.length || 50;
 		this.logFile = `/userdata/${this.logName}.json`;
 		this.logArray = [];
+		this.getLogs();
 		this.captureStdOut();
 		this.captureStdErr();
-		this.readLogs();
 	}
 
-	readLogs() {
+	getLogs() {
 		try {
 			const log = fs.readFileSync(this.logFile, 'utf8');
 			this.logArray = JSON.parse(log);
 			this.homey.log('logfile retrieved');
-			return Promise.resolve(this.logArray);
+			return this.logArray;
 		} catch (error) {
-			if (error.message.includes('ENOENT')) {
-				this.homey.log('logfile not found');
-				return Promise.resolve(this.logArray);
-			}
+			if (error.message.includes('ENOENT')) return [];
 			this.homey.error('error parsing logfile: ', error.message);
-			return Promise.reject(error);
+			return [];
 		}
 	}
 
 	saveLogs() {
 		try {
-			this.homey.log('saving logfile...');
 			fs.writeFileSync(this.logFile, JSON.stringify(this.logArray));
-			return Promise.resolve('logfile saved');
+			this.homey.log('logfile saved');
+			return true;
 		} catch (error) {
 			this.homey.error('error writing logfile: ', error.message);
-			return Promise.reject(error);
+			return false;
 		}
 	}
 
@@ -69,14 +66,11 @@ class captureLogs {
 			fs.unlinkSync(this.logFile);
 			this.logArray = [];
 			this.homey.log('logfile deleted');
-			return Promise.resolve('logfile deleted');
+			return true;
 		} catch (error) {
-			if (error.message.includes('ENOENT')) {
-				this.logArray = [];
-				return Promise.resolve(this.homey.log('logfile not found, in-memory logs deleted'));
-			}
+			if (error.message.includes('ENOENT')) return false;
 			this.homey.error('error deleting logfile: ', error.message);
-			return Promise.reject(error);
+			return false;
 		}
 	}
 
