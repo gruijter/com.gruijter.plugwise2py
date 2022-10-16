@@ -1,255 +1,269 @@
 {
-	"id": "com.gruijter.plugwise2py",
-	"name": {
-		"en": "Plugwise2py"
-	},
-	"description": {
-		"en": "monitor and control plugwise circles via Plugwise2py",
-		"nl": "lees en bestuur plugwise circles via Plugwise2py"
-	},
-	"tags": {
-		"en": [ "plugwise", "energy monitoring" ],
-		"nl": [ "plugwise", "energie meten"  ]
-	},
-	"brandColor": "#063970",
-	"version": "4.0.0",
-	"compatibility": ">= 6.0",
-	"sdk": 3,
-	"author": {
-		"name": "Robin de Gruijter",
-		"email": "gruijter@hotmail.com"
-	},
-	"copyright": "Robin de Gruijter (gruijter@hotmail.com)",
-	"license": " GPL-3.0-or-later",
-	"contributors": {
-		"developers": [{"name": "Robin de Gruijter","email": "gruijter@hotmail.com"}],
-		"translators": [{"name": "🇬🇧 Robin"},{"name": "🇳🇱 Robin"}]
-	},
-	"contributing": {
-		"donate": {
-			"paypal": {
-			"username": "gruijter"
-			}
-		}
-	},
-	"bugs": {
-		"url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
-	},
-	"homeyCommunityTopicId": 10635,
-	"images": {
-		"large": "./assets/images/large.jpg",
-		"small": "./assets/images/small.jpg"
-	},
-	"category": ["energy","appliances", "tools"],
-	"capabilities": {
-		"meter_power": {
-			"type": "number",
-			"title": {
-				"en": "Power Meter",
-				"nl": "Energiemeter",
-				"de": "Energiezähler"
-			},
-			"decimals": 4,
-			"units": {
-				"en": "KWh"
-			},
-			"chartType": "spline",
-			"desc": {
-				"en": "Power usage in KiloWattHour (kWh)",
-				"nl": "Stroomverbuik in KiloWattUur (kWh)",
-				"de": "Energieverbrauch in Kilowattstunde (kWh)"
-			},
-			"options": {
-				"isGenerator": {
-					"type": "boolean",
-					"default": false,
-					"desc": {
-						"en": "This flag is used to determine whether this devices uses or generates power.",
-						"de": "Dieser Flag wird benutzt, um zu bestimmen, ob diese Geräte Energie verbrauchen oder produzieren."
-					}
-				}
-			},
-			"insights": true,
-			"getable": true,
-			"setable": false,
-			"uiComponent": "sensor",
-			"$flow": {
-				"triggers": [
-					{
-						"id": "meter_power_changed",
-						"title": {
-							"en": "The power meter changed",
-							"nl": "De stroommeter is veranderd",
-							"de": "Der Gesamtverbrauch hat sich geändert"
-						},
-						"tokens": [
-							{
-								"name": "meter_power",
-								"title": {
-									"en": "Power Meter",
-									"nl": "Energiemeter",
-									"de": "Energiezähler"
-								},
-								"type": "number",
-								"example": 25
-							}
-						]
-					}
-				]
-			}
-		}
-	},
-	"drivers": [
-		{
-				"id": "circle",
-				"name": {
-				"en": "Plugwise2py",
-				"nl": "Plugwise2py"
-			},
-			"class": "socket",
-			"capabilities": [ "onoff", "measure_power", "meter_power" ],
-			"images": {
-				"large": "drivers/circle/assets/images/large.jpg",
-				"small": "drivers/circle/assets/images/small.jpg"
-				},
-			"pair": [
-				{
-					"id": "list_circles",
-					"template": "list_devices",
-					"navigation": {
-						"next": "add_circles"
-					}
-				},
-				{
-					"id": "add_circles",
-					"template": "add_devices"
-				}
-			],
-			"settings": [
-				{
-					"type": "group",
-					"label": {
-					"en": "Circle info",
-					"nl": "Circle info"
-					},
-					"children": [
-						{
-							"id": "mac",
-							"type": "label",
-							"label": {
-							"en": "mac",
-							"nl": "mac"
-							},
-							"value": "A1B2C3D4"
-						},
-						{
-							"id": "type",
-							"type": "label",
-							"label": {
-							"en": "type",
-							"nl": "type"
-							},
-							"value": "unknown"
-						},
-						{
-							"id": "lastseen",
-							"type": "label",
-							"label": {
-							"en": "Last seen",
-							"nl": "Laatst gezien"
-							},
-							"value": " "
-						},
-						{
-							"id": "production",
-							"type": "label",
-							"label": {
-							"en": "production",
-							"nl": "productie"
-							},
-							"value": " "
-						},
-						{
-							"id": "pwName",
-							"type": "label",
-							"label": {
-							"en": "pw2py name",
-							"nl": "pw2py naam"
-							},
-							"value": " "
-						},
-						{
-							"id": "location",
-							"type": "label",
-							"label": {
-							"en": "pw2py location",
-							"nl": "pw2py locatie"
-							},
-							"value": " "
-						},
-						{
-							"id": "switchable",
-							"type": "label",
-							"label": {
-							"en": "switchable",
-							"nl": "schakelbaar"
-							},
-							"value": "true"
-						},
-						{
-							"id": "schedule",
-							"type": "label",
-							"label": {
-							"en": "schedule",
-							"nl": "tijdschema"
-							},
-							"value": "off"
-						},
-						{
-							"id": "schedname",
-							"type": "label",
-							"label": {
-							"en": "schedule name",
-							"nl": "tijdschema naam"
-							},
-							"value": "off"
-						}
-					]
-				},
-				{
-					"type": "group",
-					"label": {
-					"en": "pw2py Circle settings",
-					"nl": "pw2py Circle instellingen"
-					},
-					"children": [
-						{
-							"id": "pollingInterval",
-							"type": "number",
-							"label": {
-							"en": "polling interval (s)",
-							"nl": "polling interval (s)"
-							},
-							"attr": { "min": 10 },
-							"value": 20
-						}
-					]
-				}
-			]
-		}
-	],
-	"api": {
-		"getLogs": {
-		  "method": "get",
-		  "path": "/getlogs"
-		},
-		"deleteLogs": {
-		  "method": "get",
-		  "path": "/deletelogs"
-		},
-		"validateSettings": {
-		  "method": "post",
-		  "path": "/validate"
-		}
-	}
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.gruijter.plugwise2py",
+  "name": {
+    "en": "Plugwise2py"
+  },
+  "description": {
+    "en": "monitor and control plugwise circles via Plugwise2py",
+    "nl": "lees en bestuur plugwise circles via Plugwise2py"
+  },
+  "tags": {
+    "en": [
+      "plugwise",
+      "energy monitoring"
+    ],
+    "nl": [
+      "plugwise",
+      "energie meten"
+    ]
+  },
+  "brandColor": "#063970",
+  "version": "4.0.1",
+  "compatibility": ">= 6.0",
+  "sdk": 3,
+  "author": {
+    "name": "Robin de Gruijter",
+    "email": "gruijter@hotmail.com"
+  },
+  "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
+  "license": " GPL-3.0-or-later",
+  "contributors": {
+    "developers": [
+      {
+        "name": "Robin de Gruijter",
+        "email": "gruijter@hotmail.com"
+      }
+    ],
+    "translators": [
+      {
+        "name": "🇬🇧 Robin"
+      },
+      {
+        "name": "🇳🇱 Robin"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "gruijter"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
+  },
+  "homeyCommunityTopicId": 10635,
+  "images": {
+    "large": "./assets/images/large.jpg",
+    "small": "./assets/images/small.jpg"
+  },
+  "category": [
+    "energy",
+    "appliances",
+    "tools"
+  ],
+  "api": {
+    "getLogs": {
+      "method": "get",
+      "path": "/getlogs"
+    },
+    "deleteLogs": {
+      "method": "get",
+      "path": "/deletelogs"
+    },
+    "validateSettings": {
+      "method": "post",
+      "path": "/validate"
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "drivers": [
+    {
+      "name": {
+        "en": "Plugwise2py",
+        "nl": "Plugwise2py"
+      },
+      "class": "socket",
+      "capabilities": [
+        "onoff",
+        "measure_power",
+        "meter_power"
+      ],
+      "images": {
+        "large": "drivers/circle/assets/images/large.jpg",
+        "small": "drivers/circle/assets/images/small.jpg"
+      },
+      "pair": [
+        {
+          "id": "list_circles",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_circles"
+          }
+        },
+        {
+          "id": "add_circles",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Circle info",
+            "nl": "Circle info"
+          },
+          "children": [
+            {
+              "id": "mac",
+              "type": "label",
+              "label": {
+                "en": "mac",
+                "nl": "mac"
+              },
+              "value": "A1B2C3D4"
+            },
+            {
+              "id": "type",
+              "type": "label",
+              "label": {
+                "en": "type",
+                "nl": "type"
+              },
+              "value": "unknown"
+            },
+            {
+              "id": "lastseen",
+              "type": "label",
+              "label": {
+                "en": "Last seen",
+                "nl": "Laatst gezien"
+              },
+              "value": " "
+            },
+            {
+              "id": "production",
+              "type": "label",
+              "label": {
+                "en": "production",
+                "nl": "productie"
+              },
+              "value": " "
+            },
+            {
+              "id": "pwName",
+              "type": "label",
+              "label": {
+                "en": "pw2py name",
+                "nl": "pw2py naam"
+              },
+              "value": " "
+            },
+            {
+              "id": "location",
+              "type": "label",
+              "label": {
+                "en": "pw2py location",
+                "nl": "pw2py locatie"
+              },
+              "value": " "
+            },
+            {
+              "id": "switchable",
+              "type": "label",
+              "label": {
+                "en": "switchable",
+                "nl": "schakelbaar"
+              },
+              "value": "true"
+            },
+            {
+              "id": "schedule",
+              "type": "label",
+              "label": {
+                "en": "schedule",
+                "nl": "tijdschema"
+              },
+              "value": "off"
+            },
+            {
+              "id": "schedname",
+              "type": "label",
+              "label": {
+                "en": "schedule name",
+                "nl": "tijdschema naam"
+              },
+              "value": "off"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "pw2py Circle settings",
+            "nl": "pw2py Circle instellingen"
+          },
+          "children": [
+            {
+              "id": "pollingInterval",
+              "type": "number",
+              "label": {
+                "en": "polling interval (s)",
+                "nl": "polling interval (s)"
+              },
+              "attr": {
+                "min": 10
+              },
+              "value": 20
+            }
+          ]
+        }
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "id": "circle"
+    }
+  ],
+  "capabilities": {
+    "meter_power": {
+      "type": "number",
+      "title": {
+        "en": "Power Meter",
+        "nl": "Energiemeter",
+        "de": "Energiezähler"
+      },
+      "decimals": 4,
+      "units": {
+        "en": "KWh"
+      },
+      "chartType": "spline",
+      "desc": {
+        "en": "Power usage in KiloWattHour (kWh)",
+        "nl": "Stroomverbuik in KiloWattUur (kWh)",
+        "de": "Energieverbrauch in Kilowattstunde (kWh)"
+      },
+      "options": {
+        "isGenerator": {
+          "type": "boolean",
+          "default": false,
+          "desc": {
+            "en": "This flag is used to determine whether this devices uses or generates power.",
+            "de": "Dieser Flag wird benutzt, um zu bestimmen, ob diese Geräte Energie verbrauchen oder produzieren."
+          }
+        }
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    }
+  }
 }

@@ -42,10 +42,7 @@ class Circle extends Device {
 			this.log('registering listeners');
 			if (!this.allListeners) this.allListeners = {};
 			// register capability listener
-			this.registerCapabilityListener('onoff', (value) => {
-				// this.log(`on/off requested: ${value} ${JSON.stringify(opts)}`);
-				this.driver.switchCircleOnoff(this.getData().id, value);
-			});
+			this.registerCapabilityListener('onoff', (value) => this.driver.switchCircleOnoff(this.getData().id, value));
 		} catch (error) {
 			this.error(error);
 		}

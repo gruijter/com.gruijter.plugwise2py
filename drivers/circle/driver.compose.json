@@ -1,0 +1,148 @@
+{
+  "name": {
+    "en": "Plugwise2py",
+    "nl": "Plugwise2py"
+  },
+  "class": "socket",
+  "capabilities": [
+    "onoff",
+    "measure_power",
+    "meter_power"
+  ],
+  "images": {
+    "large": "drivers/circle/assets/images/large.jpg",
+    "small": "drivers/circle/assets/images/small.jpg"
+  },
+  "pair": [
+    {
+      "id": "list_circles",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_circles"
+      }
+    },
+    {
+      "id": "add_circles",
+      "template": "add_devices"
+    }
+  ],
+  "settings": [
+    {
+      "type": "group",
+      "label": {
+        "en": "Circle info",
+        "nl": "Circle info"
+      },
+      "children": [
+        {
+          "id": "mac",
+          "type": "label",
+          "label": {
+            "en": "mac",
+            "nl": "mac"
+          },
+          "value": "A1B2C3D4"
+        },
+        {
+          "id": "type",
+          "type": "label",
+          "label": {
+            "en": "type",
+            "nl": "type"
+          },
+          "value": "unknown"
+        },
+        {
+          "id": "lastseen",
+          "type": "label",
+          "label": {
+            "en": "Last seen",
+            "nl": "Laatst gezien"
+          },
+          "value": " "
+        },
+        {
+          "id": "production",
+          "type": "label",
+          "label": {
+            "en": "production",
+            "nl": "productie"
+          },
+          "value": " "
+        },
+        {
+          "id": "pwName",
+          "type": "label",
+          "label": {
+            "en": "pw2py name",
+            "nl": "pw2py naam"
+          },
+          "value": " "
+        },
+        {
+          "id": "location",
+          "type": "label",
+          "label": {
+            "en": "pw2py location",
+            "nl": "pw2py locatie"
+          },
+          "value": " "
+        },
+        {
+          "id": "switchable",
+          "type": "label",
+          "label": {
+            "en": "switchable",
+            "nl": "schakelbaar"
+          },
+          "value": "true"
+        },
+        {
+          "id": "schedule",
+          "type": "label",
+          "label": {
+            "en": "schedule",
+            "nl": "tijdschema"
+          },
+          "value": "off"
+        },
+        {
+          "id": "schedname",
+          "type": "label",
+          "label": {
+            "en": "schedule name",
+            "nl": "tijdschema naam"
+          },
+          "value": "off"
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "pw2py Circle settings",
+        "nl": "pw2py Circle instellingen"
+      },
+      "children": [
+        {
+          "id": "pollingInterval",
+          "type": "number",
+          "label": {
+            "en": "polling interval (s)",
+            "nl": "polling interval (s)"
+          },
+          "attr": {
+            "min": 10
+          },
+          "value": 20
+        }
+      ]
+    }
+  ],
+  "connectivity": [
+    "lan"
+  ],
+  "platforms": [
+    "local"
+  ]
+}

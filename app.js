@@ -65,7 +65,6 @@ class settingsBackend extends Homey.App {
 
 	// check the MQTT settings from frontend
 	// validateSettings(query) > was moved to driver
-
 }
 
 module.exports = settingsBackend;

@@ -1,5 +1,6 @@
 Version changelog
 
+v4.0.1  2022.10.16 Rewrite to SDK3. Migrate to compose. Multiple improvements. MQTT upgrade v4.3.7
 v4.0.0  2022.10.15 Rewrite to SDK3. MQTT upgrade v4.3.7
 v3.1.0  2021.08.28 MQTT upgrade v4.2.8. Improved logs. Added brandcolor.
 v3.0.0  2020.04.03 MQTT upgrade v3.0.0. Added MQTT TLS support. Added Plugwise2Py server issue detection.

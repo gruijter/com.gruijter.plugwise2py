@@ -1,0 +1,83 @@
+{
+  "id": "com.gruijter.plugwise2py",
+  "name": {
+    "en": "Plugwise2py"
+  },
+  "description": {
+    "en": "monitor and control plugwise circles via Plugwise2py",
+    "nl": "lees en bestuur plugwise circles via Plugwise2py"
+  },
+  "tags": {
+    "en": [
+      "plugwise",
+      "energy monitoring"
+    ],
+    "nl": [
+      "plugwise",
+      "energie meten"
+    ]
+  },
+  "brandColor": "#063970",
+  "version": "4.0.1",
+  "compatibility": ">= 6.0",
+  "sdk": 3,
+  "author": {
+    "name": "Robin de Gruijter",
+    "email": "gruijter@hotmail.com"
+  },
+  "copyright": "Robin de Gruijter (gruijter@hotmail.com)",
+  "license": " GPL-3.0-or-later",
+  "contributors": {
+    "developers": [
+      {
+        "name": "Robin de Gruijter",
+        "email": "gruijter@hotmail.com"
+      }
+    ],
+    "translators": [
+      {
+        "name": "🇬🇧 Robin"
+      },
+      {
+        "name": "🇳🇱 Robin"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "gruijter"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
+  },
+  "homeyCommunityTopicId": 10635,
+  "images": {
+    "large": "./assets/images/large.jpg",
+    "small": "./assets/images/small.jpg"
+  },
+  "category": [
+    "energy",
+    "appliances",
+    "tools"
+  ],
+  "api": {
+    "getLogs": {
+      "method": "get",
+      "path": "/getlogs"
+    },
+    "deleteLogs": {
+      "method": "get",
+      "path": "/deletelogs"
+    },
+    "validateSettings": {
+      "method": "post",
+      "path": "/validate"
+    }
+  },
+  "platforms": [
+    "local"
+  ]
+}
