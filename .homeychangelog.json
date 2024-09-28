@@ -10,5 +10,8 @@
   },
   "4.0.1": {
     "en": "Rewrite to SDK3. Migrate to compose. Multiple improvements. MQTT upgrade v4.3.7"
+  },
+  "4.1.0": {
+    "en": "Capability flows compatibility >=fw12.2.0. MQTT upgrade to v4.3.8"
   }
 }
