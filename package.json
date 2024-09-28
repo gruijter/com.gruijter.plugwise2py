@@ -3,9 +3,12 @@
   "version": "4.0.0",
   "description": "Energy management for plugwise circles via [Plugwise-2-py].",
   "main": "api.js",
+  "engines": {
+    "node": ">=12.16.1"
+  },
   "dependencies": {
     "fixture-stdout": "^0.2.1",
-    "mqtt": "^4.3.7"
+    "mqtt": "^4.3.8"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/gruijter/com.gruijter.plugwise2py/issues"
   },
-  "homepage": "https://github.com/gruijter/com.gruijter.plugwise2py#readme"
+  "homepage": "https://github.com/gruijter/com.gruijter.plugwise2py#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-athom": "^3.1.3"
+  }
 }

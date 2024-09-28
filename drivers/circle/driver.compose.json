@@ -9,6 +9,11 @@
     "measure_power",
     "meter_power"
   ],
+  "capabilitiesOptions": {
+    "meter_power": { 
+			"decimals": 4
+    }
+	},
   "images": {
     "large": "drivers/circle/assets/images/large.jpg",
     "small": "drivers/circle/assets/images/small.jpg"

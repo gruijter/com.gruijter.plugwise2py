@@ -19,8 +19,8 @@
     ]
   },
   "brandColor": "#063970",
-  "version": "4.0.1",
-  "compatibility": ">= 6.0",
+  "version": "4.1.0",
+  "compatibility": ">= 8.0",
   "sdk": 3,
   "author": {
     "name": "Robin de Gruijter",
@@ -93,6 +93,11 @@
         "measure_power",
         "meter_power"
       ],
+      "capabilitiesOptions": {
+        "meter_power": {
+          "decimals": 4
+        }
+      },
       "images": {
         "large": "drivers/circle/assets/images/large.jpg",
         "small": "drivers/circle/assets/images/small.jpg"
@@ -231,39 +236,5 @@
       ],
       "id": "circle"
     }
-  ],
-  "capabilities": {
-    "meter_power": {
-      "type": "number",
-      "title": {
-        "en": "Power Meter",
-        "nl": "Energiemeter",
-        "de": "Energiezähler"
-      },
-      "decimals": 4,
-      "units": {
-        "en": "KWh"
-      },
-      "chartType": "spline",
-      "desc": {
-        "en": "Power usage in KiloWattHour (kWh)",
-        "nl": "Stroomverbuik in KiloWattUur (kWh)",
-        "de": "Energieverbrauch in Kilowattstunde (kWh)"
-      },
-      "options": {
-        "isGenerator": {
-          "type": "boolean",
-          "default": false,
-          "desc": {
-            "en": "This flag is used to determine whether this devices uses or generates power.",
-            "de": "Dieser Flag wird benutzt, um zu bestimmen, ob diese Geräte Energie verbrauchen oder produzieren."
-          }
-        }
-      },
-      "insights": true,
-      "getable": true,
-      "setable": false,
-      "uiComponent": "sensor"
-    }
-  }
+  ]
 }
